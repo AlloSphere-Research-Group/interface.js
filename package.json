@@ -1,0 +1,27 @@
+{
+  "name": "interface.js",
+  "version": "1.0.0",
+  "description": "Library for browser-based interfaces",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlloSphere-Research-Group/interface.js.git"
+  },
+  "keywords": [
+    "interface",
+    "gui",
+    "browser",
+    "javascript",
+    "osc",
+    "midi"
+  ],
+  "author": "Charlie Roberts <charlie@charlie-roberts.com> (http://www.charlie-roberts.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AlloSphere-Research-Group/interface.js/issues"
+  },
+  "homepage": "https://github.com/AlloSphere-Research-Group/interface.js#readme"
+}
