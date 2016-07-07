@@ -9,35 +9,37 @@ var gulp = require('gulp'),
     babelify   = require('babelify'),
     mocha      = require('gulp-mocha')
 
+// BUILD JS
 gulp.task( 'js', function() {
   browserify({ debug:true, standalone:'genish' })
-    .transform( babelify, { presets:['es2015'] })
-    .require( './js/index.js', { entry: true } ) 
-    .bundle()
-    .pipe( source('gen.lib.js') )
-    .pipe( gulp.dest('./dist') )
-    //.pipe( uglify() )
+    .transform( babelify, { presets:['es2015'] })     // Transforms to EC5
+    .require( './js/index.js', { entry: true } )      // Loads Library Requirements
+    .bundle()                                         // Concatenates
+    .pipe( source('gen.lib.js') )                     // Makes a Library to be used client-side
+    .pipe( gulp.dest('./dist') )                      //
+    //.pipe( uglify() )                               // Minimize or obfuscate
     //.pipe( gulp.dest('./dist') )
-    .pipe( 
-      notify({ 
+    .pipe(
+      notify({
         message:'Build has been completed',
         onLast:true
-      }) 
+      })
     )
-  
-  // transpile (but don't browserify) for use with node.js tests
+
+  // For UNIT tests in node, we transpile (but do not browserify)
   return gulp.src( './js/**.js' )
     .pipe( babel({ presets:['es2015'] }) )
     .pipe( gulp.dest('./dist' ) )
 
 })
 
-gulp.task( 'test', ['js'], ()=> {
+// Unit Tests
+gulp.task( 'test', ['js'], ()=> {                     // runs gulp.task('js') first
   return gulp.src('tests/gen.tests.js', {read:false})
-    .pipe( mocha({ reporter:'nyan' }) ) // spec, min, nyan, list
+    .pipe( mocha({ reporter:'nyan' }) )               // spec, min, nyan, list
 })
 
-
+// Run Tests on any file change in js/ folder
 gulp.task( 'watch', function() {
   gulp.watch( './js/**.js', ['test'] )
 })
