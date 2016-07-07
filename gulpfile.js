@@ -11,11 +11,11 @@ var gulp = require('gulp'),
 
 // BUILD JS
 gulp.task( 'js', function() {
-  browserify({ debug:true, standalone:'genish' })
+  browserify({ debug:true, standalone:'interface' })
     .transform( babelify, { presets:['es2015'] })     // Transforms to EC5
     .require( './js/index.js', { entry: true } )      // Loads Library Requirements
     .bundle()                                         // Concatenates
-    .pipe( source('gen.lib.js') )                     // Makes a Library to be used client-side
+    .pipe( source('interface.lib.js') )               // Makes a Library to be used client-side
     .pipe( gulp.dest('./dist') )                      //
     //.pipe( uglify() )                               // Minimize or obfuscate
     //.pipe( gulp.dest('./dist') )
@@ -35,7 +35,7 @@ gulp.task( 'js', function() {
 
 // Unit Tests
 gulp.task( 'test', ['js'], ()=> {                     // runs gulp.task('js') first
-  return gulp.src('tests/gen.tests.js', {read:false})
+  return gulp.src('tests/interface.tests.js', {read:false})
     .pipe( mocha({ reporter:'nyan' }) )               // spec, min, nyan, list
 })
 
