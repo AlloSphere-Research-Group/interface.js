@@ -12,7 +12,8 @@ let Widget = {
     
     this.container = container
     this.canvas = this.createCanvas()
-    this.ctx = this.canvas.getContext('2d')
+    this.ctx = this.canvas.getContext( '2d' )
+    //this.ctx.scale( window.devicePixelRatio, window.devicePixelRatio )
 
     this.applyHandlers( shouldUseTouch )
     this.place()
@@ -30,13 +31,15 @@ let Widget = {
 
   // use CSS to position canvas element of widget
   place() {
-    let width  = this.container.innerWidth  * this.width,
-        height = this.container.innerHeight * this.height,
-        x      = this.container.innerWidth  * this.x,
-        y      = this.container.innerHeight * this.y
+    let containerWidth = this.container.getWidth(),
+        containerHeight= this.container.getHeight(),
+        width  = containerWidth  * this.width,
+        height = containerHeight * this.height,
+        x      = containerWidth  * this.x,
+        y      = containerHeight * this.y
 
-    if( !this.attached && this.container === window ) {
-      document.querySelector('body').appendChild( this.canvas )
+    if( !this.attached ) {
+      this.container.add( this )
       this.attached = true
     }
 
@@ -48,7 +51,9 @@ let Widget = {
     this.canvas.height = height
     this.canvas.style.height = height + 'px'
     this.canvas.style.left = x
-    this.canvas.style.top  = y 
+    this.canvas.style.top  = y
+
+    this.rect = this.canvas.getBoundingClientRect() 
   },
 
   applyHandlers( shouldUseTouch=false ) {
@@ -59,7 +64,7 @@ let Widget = {
 
     for( let handlerName of handlers ) {
       this.canvas.addEventListener( handlerName, event => {
-        if( handlerName !== 'mousemove' ) console.log( event )
+        //if( handlerName !== 'mousemove' ) console.log( event )
         if( typeof this[ '__' + handlerName ] === 'function' ) this[ '__' + handlerName ]( event )
         if( typeof this[ 'on' + handlerName ]  === 'function'  ) this[ 'on' + handlerName ]( event )
       })
@@ -69,10 +74,7 @@ let Widget = {
 
   handlers: {
     mouse: [
-      'click',
       'mousedown',
-      'mouseup',
-      'mousemove'
     ],
     touch: []
   },
