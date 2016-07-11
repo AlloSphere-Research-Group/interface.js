@@ -1,22 +1,37 @@
-let ijs = require( './interface.js' )
+let Utilities = require( './utilities.js' ),
+    Filters = require( './filters.js' )
 
 let Widget = {
 
   defaults: {
     x:0,y:0,width:.25,height:.25,
-    attached:false
+    attached:false,
+    min:0, max:1,
+    scaleOutput:true, // apply scale filter by default for min / max ranges
   },
 
   init( container = window ) {
-    let shouldUseTouch = ijs.getMode() === 'touch'
+    let shouldUseTouch = Utilities.getMode() === 'touch'
     
     this.container = container
     this.canvas = this.createCanvas()
     this.ctx = this.canvas.getContext( '2d' )
-    //this.ctx.scale( window.devicePixelRatio, window.devicePixelRatio )
 
     this.applyHandlers( shouldUseTouch )
-    this.place()
+
+    if( container !== null ) { // do not place accelerometer, gyro etc.
+      this.place()
+      this.draw()
+    }
+    
+    this.filters = []
+
+    // if min/max are not 0-1 and scaling is not disabled
+    if( this.scaleOutput && (this.min !== 0 || this.max !== 1 )) {      
+      this.filters.push( 
+        Filters.Scale( 0,1,this.min,this.max ) 
+      )
+    }
     
     return this
   },
@@ -56,6 +71,16 @@ let Widget = {
     this.rect = this.canvas.getBoundingClientRect() 
   },
 
+  calculateOutput() {
+    let value = this.__value
+
+    for( let filter of this.filters ) value = filter( value )
+
+    this.value = value
+    
+    return this.value
+  },
+
   applyHandlers( shouldUseTouch=false ) {
     let handlers = shouldUseTouch ? Widget.handlers.touch : Widget.handlers.mouse
     
@@ -64,8 +89,6 @@ let Widget = {
 
     for( let handlerName of handlers ) {
       this.canvas.addEventListener( handlerName, event => {
-        //if( handlerName !== 'mousemove' ) console.log( event )
-        if( typeof this[ '__' + handlerName ] === 'function' ) this[ '__' + handlerName ]( event )
         if( typeof this[ 'on' + handlerName ]  === 'function'  ) this[ 'on' + handlerName ]( event )
       })
     }
@@ -74,6 +97,8 @@ let Widget = {
 
   handlers: {
     mouse: [
+      'mouseup',
+      'mousemove',
       'mousedown',
     ],
     touch: []

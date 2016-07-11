@@ -11,7 +11,7 @@ var gulp = require('gulp'),
 
 // BUILD JS
 gulp.task( 'js', function() {
-  browserify({ debug:true, standalone:'interface' })
+  browserify({ debug:true, standalone:'Interface' })
     .transform( babelify, { presets:['es2015'] })     // Transforms to EC5
     .require( './js/index.js', { entry: true } )      // Loads Library Requirements
     .bundle()                                         // Concatenates

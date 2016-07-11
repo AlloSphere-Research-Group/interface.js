@@ -1,13 +1,9 @@
 'use strict';
 
-var Interface = {
-  widgets: [],
-  layoutManager: null,
+var Utilities = {
   getMode: function getMode() {
     return 'ontouchstart' in document.documentElement ? 'touch' : 'mouse';
-  },
-
-  Filters: require('./filters.js')
+  }
 };
 
-module.exports = Interface;
+module.exports = Utilities;

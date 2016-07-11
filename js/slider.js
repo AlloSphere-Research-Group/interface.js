@@ -1,8 +1,6 @@
-let gui    = require( './interface.js' ),
-    Widget = require( './widget.js' ),
+let Widget = require( './widget.js' ),
     Slider = Object.create( Widget ) 
 
-// value changes can be processed by filters
 // flexible targeting(?) system
 // theming?
 // unit tests
@@ -24,13 +22,21 @@ Object.assign( Slider, {
 
     // inherited from widget, places canvas obj on screen
     slider.init( container )
-    slider.draw()
-    
-    // bind event handlers to slider instance
-    slider.__mousemove = slider.__mousemove.bind( slider )
-    slider.__mouseup   = slider.__mouseup.bind( slider )
 
+    // register event handlers
+    slider.addEvents()
+    
     return slider
+  },
+
+  addEvents() {
+    // only listen for mousedown intially; mousemove and mouseup are registered
+    // on mousedown
+    this.canvas.addEventListener( 'mousedown', this.__mousedown.bind( this ) )
+
+    // bind event handlers to slider instance
+    this.__mousemove = this.__mousemove.bind( this )
+    this.__mouseup   = this.__mouseup.bind( this )
   },
 
   draw() {
@@ -44,7 +50,7 @@ Object.assign( Slider, {
     if( this.style === 'horizontal' )
       this.ctx.fillRect( 0,0, this.__width * this.__value, this.__height )
     else
-      this.ctx.fillRect( 0, this.__height * this.__value, this.__width, this.__height )
+      this.ctx.fillRect( 0, this.__height - this.__value * this.__height, this.__width, this.__height * this.__value )
   },
 
   __mousedown( e ) { 
@@ -66,7 +72,7 @@ Object.assign( Slider, {
       if( this.style === 'horizontal' ) {
         this.__value = ( e.clientX - this.rect.left ) / this.__width
       }else{
-        this.__value = ( e.clientY - this.rect.top  ) / this.__height  
+        this.__value = 1 - ( e.clientY - this.rect.top  ) / this.__height  
       }
       
       if( this.__value > 1 ) this.__value = 1
