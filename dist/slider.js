@@ -41,13 +41,14 @@ Object.assign(Slider, {
     return slider;
   },
   addEvents: function addEvents() {
-    // only listen for mousedown intially; mousemove and mouseup are registered
-    // on mousedown
-    this.canvas.addEventListener('mousedown', this.__mousedown.bind(this));
+    // create event handlers bound to the current object, otherwise
+    // the 'this' keyword will refer to the window object in the event handlers
+    for (var key in this.events) {
+      this[key] = this.events[key].bind(this);
+    }
 
-    // bind event handlers to slider instance
-    this.__mousemove = this.__mousemove.bind(this);
-    this.__mouseup = this.__mouseup.bind(this);
+    // only listen for mousedown intially; mousemove and mouseup are registered on mousedown
+    this.canvas.addEventListener('pointerdown', this.pointerdown);
   },
   draw: function draw() {
     // draw background
@@ -59,35 +60,40 @@ Object.assign(Slider, {
 
     if (this.style === 'horizontal') this.ctx.fillRect(0, 0, this.__width * this.__value, this.__height);else this.ctx.fillRect(0, this.__height - this.__value * this.__height, this.__width, this.__height * this.__value);
   },
-  __mousedown: function __mousedown(e) {
-    this.active = true;
-    window.addEventListener('mousemove', this.__mousemove);
-    window.addEventListener('mouseup', this.__mouseup);
-  },
-  __mouseup: function __mouseup(e) {
-    this.active = false;
-    window.removeEventListener('mousemove', this.__mousemove);
-    window.removeEventListener('mouseup', this.__mouseup);
-  },
-  __mousemove: function __mousemove(e) {
-    if (this.active) {
-      var prevValue = this.value;
 
-      if (this.style === 'horizontal') {
-        this.__value = (e.clientX - this.rect.left) / this.__width;
-      } else {
-        this.__value = 1 - (e.clientY - this.rect.top) / this.__height;
-      }
 
-      if (this.__value > 1) this.__value = 1;
-      if (this.__value < 0) this.__value = 0;
+  events: {
+    pointerdown: function pointerdown(e) {
+      this.active = true;
+      window.addEventListener('pointermove', this.pointermove); // only listen for up and move events after pointerdown
+      window.addEventListener('pointerup', this.pointerup);
+    },
+    pointerup: function pointerup(e) {
+      this.active = false;
+      window.removeEventListener('pointermove', this.pointermove);
+      window.removeEventListener('pointerup', this.pointerup);
+    },
+    pointermove: function pointermove(e) {
+      if (this.active) {
+        var prevValue = this.value;
 
-      this.calculateOutput();
+        if (this.style === 'horizontal') {
+          this.__value = (e.clientX - this.rect.left) / this.__width;
+        } else {
+          this.__value = 1 - (e.clientY - this.rect.top) / this.__height;
+        }
 
-      if (prevValue !== this.value) {
-        if (typeof this.onvaluechange === 'function') {
-          this.onvaluechange(this.value, prevValue);
-          this.draw();
+        // clamp __value, which is only used internally
+        if (this.__value > 1) this.__value = 1;
+        if (this.__value < 0) this.__value = 0;
+
+        this.calculateOutput();
+
+        if (prevValue !== this.value) {
+          if (typeof this.onvaluechange === 'function') {
+            this.onvaluechange(this.value, prevValue);
+            this.draw();
+          }
         }
       }
     }

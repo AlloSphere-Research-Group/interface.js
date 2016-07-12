@@ -39,6 +39,7 @@ var Widget = {
   },
   createCanvas: function createCanvas() {
     var canvas = document.createElement('canvas');
+    canvas.setAttribute('touch-action', 'none');
     canvas.style.position = 'absolute';
     canvas.style.display = 'block';
 

@@ -32,6 +32,7 @@
     "gulp-buffer": "0.0.2",
     "gulp-mocha": "^2.2.0",
     "gulp-notify": "^2.2.0",
+    "pepjs": "^0.4.1",
     "vinyl-source-stream": "^1.1.0"
   }
 }

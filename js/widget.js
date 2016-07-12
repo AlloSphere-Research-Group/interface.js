@@ -38,6 +38,7 @@ let Widget = {
   
   createCanvas() {
     let canvas = document.createElement( 'canvas' )
+    canvas.setAttribute( 'touch-action', 'none' )
     canvas.style.position = 'absolute'
     canvas.style.display  = 'block'
     
