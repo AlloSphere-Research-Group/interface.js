@@ -1,7 +1,4 @@
-let gui = require( './interface.js' ),
-    Panel
-
-Panel = {
+let Panel = {
   defaults: {
     fullscreen:false
   },

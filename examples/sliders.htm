@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Slider Test</title>
+    <script src="../dist/interface.lib.js"></script>
+  </head>
+  
+  <body></body>
+  
+  <script>
+
+    let panel  = Interface.Panel.create()
+
+    let slider = Interface.Slider.create({ 
+        width:1, height:.25,
+        onvaluechange: ( value, prev ) => console.log( '1:', value, prev )
+      }, 
+      panel 
+    )
+
+    let slider2 = Interface.Slider.create({
+        x:0, y:.25,
+        width:.25, height:.75,
+        min:0, max:100,
+        style:'vertical',
+        onvaluechange: ( value, prev ) => console.log( '2:', value, prev )
+      }, 
+      panel 
+    )
+
+    let slider3 = Interface.Slider.create({
+        x:.25, y:.25,
+        width:.25, height:.75,
+        style:'vertical',
+        fill:'red', background:'#500',
+        value:.1,
+        onvaluechange: ( value, prev ) => console.log( '3:', value, prev )
+      }, 
+      panel 
+    )
+
+  </script>
+
+</html>

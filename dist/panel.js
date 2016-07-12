@@ -1,9 +1,6 @@
 'use strict';
 
-var gui = require('./interface.js'),
-    Panel = void 0;
-
-Panel = {
+var Panel = {
   defaults: {
     fullscreen: false
   },

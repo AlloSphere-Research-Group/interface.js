@@ -8,6 +8,9 @@ var Widget = require('./widget.js'),
 // unit tests
 
 Object.assign(Slider, {
+
+  // defaults are assigned to each widget, but can be overridden by
+  // user-defined properties passed to constructor
   defaults: {
     __value: .5, // always 0-1, not for end-users
     value: .5, // end-user value that may be filtered
@@ -22,7 +25,12 @@ Object.assign(Slider, {
 
     var slider = Object.create(this);
 
+    // apply Widget defaults, then overwrite (if applicable) with Slider defaults
+    // and then finally override with user defaults
     Object.assign(slider, Widget.defaults, Slider.defaults, props);
+
+    // set underlying value if necessary... TODO: how should this be set given min/max?
+    if (props.value) slider.__value = props.value;
 
     // inherited from widget, places canvas obj on screen
     slider.init(container);
@@ -63,7 +71,7 @@ Object.assign(Slider, {
   },
   __mousemove: function __mousemove(e) {
     if (this.active) {
-      var prevValue = this.__value;
+      var prevValue = this.value;
 
       if (this.style === 'horizontal') {
         this.__value = (e.clientX - this.rect.left) / this.__width;
@@ -74,7 +82,14 @@ Object.assign(Slider, {
       if (this.__value > 1) this.__value = 1;
       if (this.__value < 0) this.__value = 0;
 
-      if (prevValue !== this.__value) this.draw();
+      this.calculateOutput();
+
+      if (prevValue !== this.value) {
+        if (typeof this.onvaluechange === 'function') {
+          this.onvaluechange(this.value, prevValue);
+          this.draw();
+        }
+      }
     }
   }
 });
