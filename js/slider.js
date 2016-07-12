@@ -62,9 +62,10 @@ Object.assign( Slider, {
       this.ctx.fillRect( 0, this.__height - this.__value * this.__height, this.__width, this.__height * this.__value )
   },
 
-  events:{
+  events: {
     pointerdown( e ) {
       this.active = true
+      this.pointerId = e.pointerId
       window.addEventListener( 'pointermove', this.pointermove ) // only listen for up and move events after pointerdown 
       window.addEventListener( 'pointerup',   this.pointerup ) 
     },
@@ -76,7 +77,7 @@ Object.assign( Slider, {
     },
 
     pointermove( e ) {
-      if( this.active ) {
+      if( this.active && e.pointerId === this.pointerId ) {
         let prevValue = this.value
 
         if( this.style === 'horizontal' ) {
@@ -90,11 +91,13 @@ Object.assign( Slider, {
         if( this.__value < 0 ) this.__value = 0
 
         this.calculateOutput()
-
+        
         if( prevValue !== this.value ){
+          this.draw()
+
+          // (potentially) user-defined event for value changes      
           if( typeof this.onvaluechange === 'function' ) {
             this.onvaluechange( this.value, prevValue )
-            this.draw()
           }
         }
       }

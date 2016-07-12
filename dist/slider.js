@@ -65,6 +65,7 @@ Object.assign(Slider, {
   events: {
     pointerdown: function pointerdown(e) {
       this.active = true;
+      this.pointerId = e.pointerId;
       window.addEventListener('pointermove', this.pointermove); // only listen for up and move events after pointerdown
       window.addEventListener('pointerup', this.pointerup);
     },
@@ -74,7 +75,7 @@ Object.assign(Slider, {
       window.removeEventListener('pointerup', this.pointerup);
     },
     pointermove: function pointermove(e) {
-      if (this.active) {
+      if (this.active && e.pointerId === this.pointerId) {
         var prevValue = this.value;
 
         if (this.style === 'horizontal') {
@@ -90,9 +91,11 @@ Object.assign(Slider, {
         this.calculateOutput();
 
         if (prevValue !== this.value) {
+          this.draw();
+
+          // (potentially) user-defined event for value changes     
           if (typeof this.onvaluechange === 'function') {
             this.onvaluechange(this.value, prevValue);
-            this.draw();
           }
         }
       }
