@@ -37,17 +37,6 @@ Object.assign( Slider, {
     return slider
   },
 
-  addEvents() {
-    // create event handlers bound to the current object, otherwise 
-    // the 'this' keyword will refer to the window object in the event handlers
-    for( let key in this.events ) {
-      this[ key ] = this.events[ key ].bind( this ) 
-    }
-
-    // only listen for mousedown intially; mousemove and mouseup are registered on mousedown
-    this.canvas.addEventListener( 'pointerdown',  this.pointerdown )
-  },
-
   draw() {
     // draw background
     this.ctx.fillStyle = this.background
@@ -62,10 +51,24 @@ Object.assign( Slider, {
       this.ctx.fillRect( 0, this.__height - this.__value * this.__height, this.__width, this.__height * this.__value )
   },
 
+  addEvents() {
+    // create event handlers bound to the current object, otherwise 
+    // the 'this' keyword will refer to the window object in the event handlers
+    for( let key in this.events ) {
+      this[ key ] = this.events[ key ].bind( this ) 
+    }
+
+    // only listen for mousedown intially; mousemove and mouseup are registered on mousedown
+    this.canvas.addEventListener( 'pointerdown',  this.pointerdown )
+  },
+
   events: {
     pointerdown( e ) {
       this.active = true
       this.pointerId = e.pointerId
+
+      this.processPointerPosition( e ) // change slider value on click / touchdown
+
       window.addEventListener( 'pointermove', this.pointermove ) // only listen for up and move events after pointerdown 
       window.addEventListener( 'pointerup',   this.pointerup ) 
     },
@@ -77,32 +80,35 @@ Object.assign( Slider, {
     },
 
     pointermove( e ) {
-      if( this.active && e.pointerId === this.pointerId ) {
-        let prevValue = this.value
-
-        if( this.style === 'horizontal' ) {
-          this.__value = ( e.clientX - this.rect.left ) / this.__width
-        }else{
-          this.__value = 1 - ( e.clientY - this.rect.top  ) / this.__height  
-        }
-        
-        // clamp __value, which is only used internally
-        if( this.__value > 1 ) this.__value = 1
-        if( this.__value < 0 ) this.__value = 0
-
-        this.calculateOutput()
-        
-        if( prevValue !== this.value ){
-          this.draw()
-
-          // (potentially) user-defined event for value changes      
-          if( typeof this.onvaluechange === 'function' ) {
-            this.onvaluechange( this.value, prevValue )
-          }
-        }
-      }
+      if( this.active && e.pointerId === this.pointerId ) this.processPointerPosition( e )
     },
   },
+
+  processPointerPosition( e ) {
+    let prevValue = this.value
+
+    if( this.style === 'horizontal' ) {
+      this.__value = ( e.clientX - this.rect.left ) / this.__width
+    }else{
+      this.__value = 1 - ( e.clientY - this.rect.top  ) / this.__height  
+    }
+
+    // clamp __value, which is only used internally
+    if( this.__value > 1 ) this.__value = 1
+    if( this.__value < 0 ) this.__value = 0
+
+    this.calculateOutput()
+
+    if( prevValue !== this.value ){
+      this.draw()
+
+      // (potentially) user-defined event for value changes      
+      if( typeof this.onvaluechange === 'function' ) {
+        this.onvaluechange( this.value, prevValue )
+      }
+    }
+  },
+
 })
 
 module.exports = Slider
