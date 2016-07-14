@@ -9,6 +9,7 @@ var Widget = {
     x: 0, y: 0, width: .25, height: .25,
     attached: false,
     min: 0, max: 1,
+    useCanvas: true,
     scaleOutput: true },
 
   init: function init() {
@@ -17,13 +18,14 @@ var Widget = {
     var shouldUseTouch = Utilities.getMode() === 'touch';
 
     this.container = container;
-    this.canvas = this.createCanvas();
-    this.ctx = this.canvas.getContext('2d');
+    this.element = this.createElement();
+
+    if (this.useCanvas) this.ctx = this.element.getContext('2d');
 
     this.applyHandlers(shouldUseTouch);
 
     if (container !== null) {
-      // do not place accelerometer, gyro etc.
+      // do not place accelerometer, gyro etc. TODO: should these have display widgets?
       this.place();
       this.draw();
     }
@@ -37,17 +39,9 @@ var Widget = {
 
     return this;
   },
-  createCanvas: function createCanvas() {
-    var canvas = document.createElement('canvas');
-    canvas.setAttribute('touch-action', 'none');
-    canvas.style.position = 'absolute';
-    canvas.style.display = 'block';
-
-    return canvas;
-  },
 
 
-  // use CSS to position canvas element of widget
+  // use CSS to position element element of widget
   place: function place() {
     var containerWidth = this.container.getWidth(),
         containerHeight = this.container.getHeight(),
@@ -64,14 +58,14 @@ var Widget = {
     this.__width = width;
     this.__height = height;
 
-    this.canvas.width = width;
-    this.canvas.style.width = width + 'px';
-    this.canvas.height = height;
-    this.canvas.style.height = height + 'px';
-    this.canvas.style.left = x;
-    this.canvas.style.top = y;
+    this.element.width = width;
+    this.element.style.width = width + 'px';
+    this.element.height = height;
+    this.element.style.height = height + 'px';
+    this.element.style.left = x;
+    this.element.style.top = y;
 
-    this.rect = this.canvas.getBoundingClientRect();
+    this.rect = this.element.getBoundingClientRect();
   },
   calculateOutput: function calculateOutput() {
     var value = this.__value;
@@ -113,7 +107,6 @@ var Widget = {
 
     // widgets have ijs defined handlers stored in the _events array,
     // and user-defined events stored with 'on' prefixes (e.g. onclick, onmousedown)
-
     var _iteratorNormalCompletion2 = true;
     var _didIteratorError2 = false;
     var _iteratorError2 = undefined;
@@ -122,7 +115,7 @@ var Widget = {
       var _loop = function _loop() {
         var handlerName = _step2.value;
 
-        _this.canvas.addEventListener(handlerName, function (event) {
+        _this.element.addEventListener(handlerName, function (event) {
           if (typeof _this['on' + handlerName] === 'function') _this['on' + handlerName](event);
         });
       };

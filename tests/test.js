@@ -5,7 +5,7 @@ function runTests() {
 
     // carry out before each test... a new panel and slider is created everytime
     before( function() {
-      panel = Interface.Panel.create()
+      panel  = Interface.Panel.create()
       slider = Interface.Slider.create({ width:1, height:.25 }, panel ) 
     })
 

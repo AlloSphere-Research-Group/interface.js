@@ -1,4 +1,5 @@
 let Widget = require( './widget.js' ),
+    Utilities = require( './utilities.js' ),
     Slider = Object.create( Widget ) 
 
 // flexible targeting(?) system
@@ -12,8 +13,10 @@ Object.assign( Slider, {
   defaults: {
     __value:.5, // always 0-1, not for end-users
     value:.5,   // end-user value that may be filtered
-    background:'black',
-    fill:'grey',
+    background:'#003',
+    fill:'#007',
+    stroke:'#00f',
+    borderWidth:8,
     active: false,
     style:'horizontal'
   },
@@ -37,18 +40,24 @@ Object.assign( Slider, {
     return slider
   },
 
+  createElement : Utilities.createCanvas,
+
   draw() {
     // draw background
-    this.ctx.fillStyle = this.background
+    this.ctx.fillStyle   = this.background
+    this.ctx.strokeStyle = this.stroke
+    this.ctx.lineWidth = this.borderWidth
     this.ctx.fillRect( 0,0, this.__width, this.__height )
 
     // draw fill (slider value representation)
     this.ctx.fillStyle = this.fill
 
     if( this.style === 'horizontal' )
-      this.ctx.fillRect( 0,0, this.__width * this.__value, this.__height )
+      this.ctx.fillRect( 0, 0, this.__width * this.__value, this.__height )
     else
       this.ctx.fillRect( 0, this.__height - this.__value * this.__height, this.__width, this.__height * this.__value )
+
+    this.ctx.strokeRect( 0,0, this.__width, this.__height )
   },
 
   addEvents() {
@@ -59,7 +68,7 @@ Object.assign( Slider, {
     }
 
     // only listen for mousedown intially; mousemove and mouseup are registered on mousedown
-    this.canvas.addEventListener( 'pointerdown',  this.pointerdown )
+    this.element.addEventListener( 'pointerdown',  this.pointerdown )
   },
 
   events: {
@@ -70,13 +79,13 @@ Object.assign( Slider, {
       this.processPointerPosition( e ) // change slider value on click / touchdown
 
       window.addEventListener( 'pointermove', this.pointermove ) // only listen for up and move events after pointerdown 
-      window.addEventListener( 'pointerup',   this.pointerup ) 
+      this.element.addEventListener( 'pointerup',   this.pointerup ) 
     },
 
     pointerup( e ) {
       this.active = false
       window.removeEventListener( 'pointermove', this.pointermove ) 
-      window.removeEventListener( 'pointerup',   this.pointerup ) 
+      this.element.removeEventListener( 'pointerup',   this.pointerup ) 
     },
 
     pointermove( e ) {

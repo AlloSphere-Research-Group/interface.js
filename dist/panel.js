@@ -64,7 +64,7 @@ var Panel = {
   add: function add(widget) {
     // check to make sure widget has not been already added
     if (this.children.indexOf(widget) === -1) {
-      this.div.appendChild(widget.canvas);
+      this.div.appendChild(widget.element);
       this.children.push(widget);
     } else {
       throw Error('Widget is already added to panel.');
