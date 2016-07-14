@@ -2,11 +2,8 @@
 
 var Widget = require('./widget.js'),
     Utilities = require('./utilities.js'),
-    Slider = Object.create(Widget);
-
-// flexible targeting(?) system
-// theming?
-// unit tests
+    CanvasWidget = require('./canvasWidget.js'),
+    Slider = Object.create(CanvasWidget);
 
 Object.assign(Slider, {
 
@@ -28,25 +25,24 @@ Object.assign(Slider, {
 
     var slider = Object.create(this);
 
+    CanvasWidget.init.call(slider, container);
     // apply Widget defaults, then overwrite (if applicable) with Slider defaults
     // and then finally override with user defaults
-    Object.assign(slider, Widget.defaults, Slider.defaults, props);
+
+    console.log("props", props);
+    Object.assign(slider, Slider.defaults, props);
+    console.log('slider', slider.x, slider.y, slider.width, slider.height);
 
     // set underlying value if necessary... TODO: how should this be set given min/max?
     if (props.value) slider.__value = props.value;
 
-    // inherited from widget, places canvas obj on screen
-    slider.init(container);
-
     // register event handlers
     slider.addEvents();
+    slider.place(); // inherited from DOMWidget
+    slider.draw();
 
     return slider;
   },
-
-
-  createElement: Utilities.createCanvas,
-
   draw: function draw() {
     // draw background
     this.ctx.fillStyle = this.background;
@@ -81,12 +77,14 @@ Object.assign(Slider, {
       this.processPointerPosition(e); // change slider value on click / touchdown
 
       window.addEventListener('pointermove', this.pointermove); // only listen for up and move events after pointerdown
-      this.element.addEventListener('pointerup', this.pointerup);
+      window.addEventListener('pointerup', this.pointerup);
     },
     pointerup: function pointerup(e) {
-      this.active = false;
-      window.removeEventListener('pointermove', this.pointermove);
-      this.element.removeEventListener('pointerup', this.pointerup);
+      if (this.active && e.pointerId === this.pointerId) {
+        this.active = false;
+        window.removeEventListener('pointermove', this.pointermove);
+        window.removeEventListener('pointerup', this.pointerup);
+      }
     },
     pointermove: function pointermove(e) {
       if (this.active && e.pointerId === this.pointerId) this.processPointerPosition(e);
