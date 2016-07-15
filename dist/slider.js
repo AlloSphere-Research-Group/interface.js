@@ -37,6 +37,9 @@ Object.assign(Slider, {
     // register event handlers
     slider.addEvents();
     slider.place(); // inherited from DOMWidget
+
+    if (slider.label) slider.addLabel();
+
     slider.draw();
 
     return slider;
@@ -85,7 +88,9 @@ Object.assign(Slider, {
       }
     },
     pointermove: function pointermove(e) {
-      if (this.active && e.pointerId === this.pointerId) this.processPointerPosition(e);
+      if (this.active && e.pointerId === this.pointerId) {
+        this.processPointerPosition(e);
+      }
     }
   },
 
@@ -104,13 +109,12 @@ Object.assign(Slider, {
 
     this.calculateOutput();
 
+    console.log('value:', prevValue, this.value);
     if (prevValue !== this.value) {
-      this.draw();
-
-      // (potentially) user-defined event for value changes     
       if (typeof this.onvaluechange === 'function') {
         this.onvaluechange(this.value, prevValue);
       }
+      this.draw();
     }
   }
 });

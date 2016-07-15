@@ -1,6 +1,6 @@
-let Utilities = require( './utilities.js' ),
-    Widget    = require( './widget.js' ),
-    DOMWidget = Object.create( Widget )
+let Utilities   = require( './utilities.js' ),
+    Widget      = require( './widget.js' ),
+    DOMWidget   = Object.create( Widget )
 
 Object.assign( DOMWidget, {
 
@@ -52,8 +52,7 @@ Object.assign( DOMWidget, {
 
     this.rect = this.element.getBoundingClientRect() 
   },
-
-
+  
 })
 
 module.exports = DOMWidget

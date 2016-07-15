@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Button Test</title>
+    <title>Label Test</title>
     <script src="../dist/interface.lib.js"></script>
   </head>
   
@@ -12,7 +12,8 @@
 
     var button1 = Interface.Button.create({ 
         width:.33, height:1,
-        style: 'contact'
+        style: 'contact',
+        label: { text:'x:.5, y:.5', x:.5, y:.5, width:1 }
       }, 
       panel 
     )
@@ -21,14 +22,20 @@
         x:.33, 
         width:.33, height:1,
         style:'hold',
+        label: { text:'x:.1, y:.8, align:"left", face:"Courier",size:12', size:12, x:.1, y:.8, align:'left', width:1, face:'Courier' }
       }, 
       panel 
     )
 
-    var button3 = Interface.Button.create({
+    var slider3 = Interface.Slider.create({
         x:.66, 
         width:.33, height:1,
-        style:'toggle',
+        style:'vertical',
+        value:.25,
+        label: { text:'.25', x:.5, y:.5, width:1 },
+        onvaluechange: function() {
+          this._label.text = this.value
+        },
       }, 
       panel 
     )

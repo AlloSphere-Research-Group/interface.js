@@ -2,6 +2,7 @@
 
 var Utilities = require('./utilities.js'),
     DOMWidget = require('./domWidget.js'),
+    WidgetLabel = require('./widgetLabel.js'),
     CanvasWidget = Object.create(DOMWidget);
 
 Object.assign(CanvasWidget, {
@@ -76,6 +77,18 @@ Object.assign(CanvasWidget, {
   handlers: {
     mouse: ['mouseup', 'mousemove', 'mousedown'],
     touch: []
+  },
+
+  addLabel: function addLabel() {
+    var props = Object.assign({ ctx: this.ctx }, this.label),
+        label = WidgetLabel.create(props);
+
+    this._label = label;
+    this._draw = this.draw;
+    this.draw = function () {
+      this._draw();
+      this._label.draw();
+    };
   }
 });
 

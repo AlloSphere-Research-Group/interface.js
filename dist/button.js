@@ -31,6 +31,9 @@ Object.assign(Button, {
 
     button.addEvents();
     button.place();
+
+    if (button.label) button.addLabel();
+
     button.draw();
 
     if (button.style === 'contact') button.flash = button.flash.bind(button);
