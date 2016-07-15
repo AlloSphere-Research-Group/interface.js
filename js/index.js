@@ -2,6 +2,7 @@
 let lib = {
   Panel: require( './panel.js' ),
   Slider: require( './slider.js' ),
+  Button: require( './button.js' ),
   PEP: require( 'pepjs' )
 }
 

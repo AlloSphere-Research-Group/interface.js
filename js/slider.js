@@ -10,10 +10,10 @@ Object.assign( Slider, {
   defaults: {
     __value:.5, // always 0-1, not for end-users
     value:.5,   // end-user value that may be filtered
-    background:'#003',
-    fill:'#007',
-    stroke:'#00f',
-    borderWidth:8,
+    background:'#333',
+    fill:'#777',
+    stroke:'#aaa',
+    borderWidth:4,
     active: false,
     style:  'horizontal'
   },
@@ -21,13 +21,11 @@ Object.assign( Slider, {
   create( props, container = window ) {
     let slider = Object.create( this )
     
-    CanvasWidget.init.call( slider, container )
     // apply Widget defaults, then overwrite (if applicable) with Slider defaults
-    // and then finally override with user defaults
+    CanvasWidget.init.call( slider, container )
 
-    console.log( "props", props ) 
+    // ...and then finally override with user defaults
     Object.assign( slider, Slider.defaults, props )
-    console.log( 'slider', slider.x, slider.y, slider.width, slider.height ) 
 
     // set underlying value if necessary... TODO: how should this be set given min/max?
     if( props.value ) slider.__value = props.value
