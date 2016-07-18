@@ -24,15 +24,6 @@ Object.assign( Button, {
     Object.assign( button, Button.defaults, props )
 
     if( props.value ) button.__value = props.value
-      
-    button.addEvents()
-    button.place()
-
-    if( button.label ) button.addLabel()
-
-    button.draw()
-
-    if( button.style === 'contact' ) button.flash = button.flash.bind( button ) 
 
     return button
   },
@@ -54,14 +45,9 @@ Object.assign( Button, {
     this.element.addEventListener( 'pointerdown',  this.pointerdown )
   },
 
-  flash() {
-    this.__value = 0
-    this.draw()
-  },
-
   events: {
     pointerdown( e ) {
-      // only hold needs to listen for pointerup events; toggle and contact only care about pointerdown
+      // only hold needs to listen for pointerup events; toggle and momentary only care about pointerdown
       if( this.style === 'hold' ) {
         this.active = true
         this.pointerId = e.pointerId
@@ -70,9 +56,9 @@ Object.assign( Button, {
 
       if( this.style === 'toggle' ) {
         this.__value = this.__value === 1 ? 0 : 1
-      }else if( this.style === 'contact' ) {
+      }else if( this.style === 'momentary' ) {
         this.__value = 1
-        setTimeout( this.flash, 50 )
+        setTimeout( ()=> { this.__value = 0; this.draw() }, 50 )
       }else if( this.style === 'hold' ) {
         this.__value = 1
       }

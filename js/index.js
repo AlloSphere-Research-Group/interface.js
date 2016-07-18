@@ -3,6 +3,8 @@ let lib = {
   Panel: require( './panel.js' ),
   Slider: require( './slider.js' ),
   Button: require( './button.js' ),
+  DOMWidget: require( './domWidget.js' ),
+  CanvasWidget: require( './canvasWidget.js' ),
   PEP: require( 'pepjs' )
 }
 

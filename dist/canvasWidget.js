@@ -21,8 +21,6 @@ Object.assign(CanvasWidget, {
     this.ctx = this.element.getContext('2d');
 
     this.applyHandlers(shouldUseTouch);
-
-    if (container !== null) this.draw();
   },
   createElement: function createElement() {
     var element = document.createElement('canvas');
@@ -89,6 +87,18 @@ Object.assign(CanvasWidget, {
       this._draw();
       this._label.draw();
     };
+  },
+  __addToPanel: function __addToPanel(panel) {
+    this.container = panel;
+
+    if (typeof this.addEvents === 'function') this.addEvents();
+
+    // called if widget uses DOMWidget as prototype; .place inherited from DOMWidget
+    this.place();
+
+    if (this.label) this.addLabel();
+
+    this.draw();
   }
 });
 

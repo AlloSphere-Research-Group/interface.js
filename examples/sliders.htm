@@ -10,11 +10,10 @@
 
     var panel  = Interface.Panel.create()
 
-    var slider = Interface.Slider.create({ 
+    var slider1 = Interface.Slider.create({ 
         width:1, height:.25,
-        //onvaluechange: function( value, prev ) { console.log( '1:', value, prev ) }
-      }, 
-      panel 
+        onvaluechange: function( value, prev ) { console.log( '1:', value, prev ) }
+      }
     )
 
     var slider2 = Interface.Slider.create({
@@ -22,9 +21,8 @@
         width:.25, height:.75,
         min:0, max:100,
         style:'vertical',
-        //onvaluechange: function( value, prev ) { console.log( '2:', value, prev ) }
-      }, 
-      panel 
+        onvaluechange: function( value, prev ) { console.log( '2:', value, prev ) }
+      } 
     )
 
     var slider3 = Interface.Slider.create({
@@ -33,10 +31,11 @@
         style:'vertical',
         fill:'red', background:'#500',
         value:.1,
-        //onvaluechange: function( value, prev ) { console.log( '3:', value, prev ) }
-      }, 
-      panel 
+        onvaluechange: function( value, prev ) { console.log( '3:', value, prev ) }
+      } 
     )
+
+    panel.add( slider1, slider2, slider3 )
 
   </script>
 

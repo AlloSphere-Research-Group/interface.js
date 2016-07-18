@@ -35,12 +35,14 @@ Object.assign(Slider, {
     if (props.value) slider.__value = props.value;
 
     // register event handlers
-    slider.addEvents();
-    slider.place(); // inherited from DOMWidget
+    // slider.addEvents()
 
-    if (slider.label) slider.addLabel();
+    // inherited from DOMWidget
+    // slider.place()
 
-    slider.draw();
+    //if( slider.label ) slider.addLabel()
+
+    // slider.draw()   
 
     return slider;
   },

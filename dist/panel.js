@@ -1,5 +1,8 @@
 'use strict';
 
+var DOMWidget = require('./domWidget.js'),
+    CanvasWidget = require('./canvasWidget.js');
+
 var Panel = {
   defaults: {
     fullscreen: false
@@ -61,13 +64,44 @@ var Panel = {
   getHeight: function getHeight() {
     return this.__height;
   },
-  add: function add(widget) {
-    // check to make sure widget has not been already added
-    if (this.children.indexOf(widget) === -1) {
-      this.div.appendChild(widget.element);
-      this.children.push(widget);
-    } else {
-      throw Error('Widget is already added to panel.');
+  add: function add() {
+    for (var _len = arguments.length, widgets = Array(_len), _key = 0; _key < _len; _key++) {
+      widgets[_key] = arguments[_key];
+    }
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = widgets[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var widget = _step.value;
+
+        // check to make sure widget has not been already added
+        if (this.children.indexOf(widget) === -1) {
+          if (typeof widget.__addToPanel === 'function') {
+            widget.__addToPanel(this);
+
+            this.div.appendChild(widget.element);
+            this.children.push(widget);
+          }
+        } else {
+          throw Error('Widget is already added to panel.');
+        }
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
     }
   }
 };

@@ -1,3 +1,7 @@
+let DOMWidget = require( './domWidget.js' ),
+    CanvasWidget = require( './canvasWidget.js' )
+
+
 let Panel = {
   defaults: {
     fullscreen:false
@@ -57,13 +61,19 @@ let Panel = {
   getWidth()  { return this.__width },
   getHeight() { return this.__height },
 
-  add( widget ) {
-    // check to make sure widget has not been already added
-    if( this.children.indexOf( widget ) === -1 ) {
-      this.div.appendChild( widget.element )
-      this.children.push( widget )
-    }else{
-      throw Error( 'Widget is already added to panel.' )
+  add( ...widgets ) {
+    for( let widget of widgets ) {
+      // check to make sure widget has not been already added
+      if( this.children.indexOf( widget ) === -1 ) {
+        if( typeof widget.__addToPanel === 'function' ) {
+          widget.__addToPanel( this )
+
+          this.div.appendChild( widget.element )
+          this.children.push( widget )
+        }
+      }else{
+        throw Error( 'Widget is already added to panel.' )
+      }
     }
   },
 }

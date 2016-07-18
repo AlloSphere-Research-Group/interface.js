@@ -12,26 +12,25 @@
 
     var button1 = Interface.Button.create({ 
         width:.33, height:1,
-        style: 'contact'
-      }, 
-      panel 
+        style: 'momentary'
+      } 
     )
 
     var button2 = Interface.Button.create({
         x:.33, 
         width:.33, height:1,
         style:'hold',
-      }, 
-      panel 
+      } 
     )
 
     var button3 = Interface.Button.create({
         x:.66, 
         width:.33, height:1,
         style:'toggle',
-      }, 
-      panel 
+      } 
     )
+    
+    panel.add( button1, button2, button3 )
 
   </script>
 

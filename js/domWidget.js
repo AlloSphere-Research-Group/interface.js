@@ -9,14 +9,12 @@ Object.assign( DOMWidget, {
     attached:false,
   },
 
-  init( container = window ) {
+  init( ) {
     let shouldUseTouch = Utilities.getMode() === 'touch'
     
     Widget.init.call( this )
 
     Object.assign( this, DOMWidget.defaults )
-
-    this.container = container
 
     // ALL INSTANCES OF DOMWIDGET MUST IMPLEMENT CREATE ELEMENT
     if( typeof this.createElement === 'function' ) {
@@ -36,7 +34,6 @@ Object.assign( DOMWidget, {
         y      = containerHeight * this.y
 
     if( !this.attached ) {
-      this.container.add( this )
       this.attached = true
     }
 

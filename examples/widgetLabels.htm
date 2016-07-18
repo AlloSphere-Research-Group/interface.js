@@ -14,8 +14,7 @@
         width:.33, height:1,
         style: 'contact',
         label: { text:'x:.5, y:.5', x:.5, y:.5, width:1 }
-      }, 
-      panel 
+      } 
     )
 
     var button2 = Interface.Button.create({
@@ -23,11 +22,10 @@
         width:.33, height:1,
         style:'hold',
         label: { text:'x:.1, y:.8, align:"left", face:"Courier",size:12', size:12, x:.1, y:.8, align:'left', width:1, face:'Courier' }
-      }, 
-      panel 
+      } 
     )
 
-    var slider3 = Interface.Slider.create({
+    var slider1 = Interface.Slider.create({
         x:.66, 
         width:.33, height:1,
         style:'vertical',
@@ -36,9 +34,10 @@
         onvaluechange: function() {
           this._label.text = this.value
         },
-      }, 
-      panel 
+      } 
     )
+
+    panel.add( button1, button2, slider1 )
 
   </script>
 
