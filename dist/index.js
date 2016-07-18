@@ -7,6 +7,7 @@ var lib = {
   Button: require('./button.js'),
   DOMWidget: require('./domWidget.js'),
   CanvasWidget: require('./canvasWidget.js'),
+  Menu: require('./menu.js'),
   PEP: require('pepjs')
 };
 
