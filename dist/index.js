@@ -8,6 +8,7 @@ var lib = {
   DOMWidget: require('./domWidget.js'),
   CanvasWidget: require('./canvasWidget.js'),
   Menu: require('./menu.js'),
+  Communication: require('./communication.js'),
   PEP: require('pepjs')
 };
 

@@ -1,12 +1,16 @@
 'use strict';
 
 var DOMWidget = require('./domWidget.js'),
-    CanvasWidget = require('./canvasWidget.js');
+    CanvasWidget = require('./canvasWidget.js'),
+    Panel = void 0;
 
-var Panel = {
+Panel = {
   defaults: {
     fullscreen: false
   },
+
+  // class variable for reference to all panels
+  panels: [],
 
   create: function create() {
     var props = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
@@ -35,6 +39,8 @@ var Panel = {
       var body = document.querySelector('body');
       body.appendChild(panel.div);
     }
+
+    Panel.panels.push(panel);
 
     return panel;
   },
@@ -77,13 +83,16 @@ var Panel = {
       for (var _iterator = widgets[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var widget = _step.value;
 
+
         // check to make sure widget has not been already added
         if (this.children.indexOf(widget) === -1) {
           if (typeof widget.__addToPanel === 'function') {
-            widget.__addToPanel(this);
-
             this.div.appendChild(widget.element);
             this.children.push(widget);
+
+            widget.__addToPanel(this);
+          } else {
+            throw Error('Widget cannot be added to panel; it does not contain the method .__addToPanel');
           }
         } else {
           throw Error('Widget is already added to panel.');

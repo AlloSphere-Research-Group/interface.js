@@ -57,11 +57,6 @@ Object.assign( Menu, {
 
     // called if widget uses DOMWidget as prototype; .place inherited from DOMWidget
     this.place() 
-
-    //if( this.label ) this.addLabel()
-
-    //this.draw()     
-
   }
 
 })

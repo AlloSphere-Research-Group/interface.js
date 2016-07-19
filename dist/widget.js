@@ -1,13 +1,16 @@
 'use strict';
 
 var Utilities = require('./utilities.js'),
-    Filters = require('./filters.js');
+    Filters = require('./filters.js'),
+    Communication = require('./communication.js');
 
 var Widget = {
 
   defaults: {
     min: 0, max: 1,
-    scaleOutput: true },
+    scaleOutput: true, // apply scale filter by default for min / max ranges
+    target: null
+  },
 
   init: function init() {
     Object.assign(this, Widget.defaults);
@@ -21,7 +24,7 @@ var Widget = {
 
     return this;
   },
-  calculateOutput: function calculateOutput() {
+  output: function output() {
     var value = this.__value;
 
     var _iteratorNormalCompletion = true;
@@ -50,7 +53,14 @@ var Widget = {
 
     this.value = value;
 
+    if (this.target !== null) this.transmit(this.value);
+
     return this.value;
+  },
+  transmit: function transmit() {
+    if (this.target === 'osc') {
+      Communication.OSC.send(this.address, this.value);
+    }
   }
 };
 

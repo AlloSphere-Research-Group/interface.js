@@ -29,16 +29,6 @@ Object.assign( Slider, {
 
     // set underlying value if necessary... TODO: how should this be set given min/max?
     if( props.value ) slider.__value = props.value
-      
-    // register event handlers
-    // slider.addEvents()
-
-    // inherited from DOMWidget
-    // slider.place() 
-
-    //if( slider.label ) slider.addLabel()
-
-    // slider.draw()    
 
     return slider
   },
@@ -111,9 +101,8 @@ Object.assign( Slider, {
     if( this.__value > 1 ) this.__value = 1
     if( this.__value < 0 ) this.__value = 0
 
-    this.calculateOutput()
+    this.output()
     
-    console.log( 'value:', prevValue, this.value )
     if( prevValue !== this.value ){
       if( typeof this.onvaluechange === 'function' ) {
         this.onvaluechange( this.value, prevValue )

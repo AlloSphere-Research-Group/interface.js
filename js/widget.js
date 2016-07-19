@@ -1,11 +1,13 @@
 let Utilities = require( './utilities.js' ),
-    Filters = require( './filters.js' )
+    Filters = require( './filters.js' ),
+    Communication = require( './communication.js' )
 
 let Widget = {
 
   defaults: {
     min:0, max:1,
     scaleOutput:true, // apply scale filter by default for min / max ranges
+    target:null
   },
 
   init() {
@@ -23,17 +25,23 @@ let Widget = {
     return this
   },
   
-  calculateOutput() {
+  output() {
     let value = this.__value
 
     for( let filter of this.filters ) value = filter( value )
 
     this.value = value
     
+    if( this.target !== null ) this.transmit( this.value )
+  
     return this.value
   },
 
-
+  transmit() {
+    if( this.target === 'osc' ) {
+      Communication.OSC.send( this.address, this.value )
+    }
+  }
 }
 
 module.exports = Widget
