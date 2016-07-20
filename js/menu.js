@@ -1,7 +1,6 @@
-let Widget = require( './widget.js' ),
-    Utilities = require( './utilities.js' ),
-    DOMWidget = require( './domWidget.js' ),
-    Menu = Object.create( DOMWidget ) 
+import DOMWidget from './domWidget'
+
+let Menu = Object.create( DOMWidget ) 
 
 Object.assign( Menu, {
 
@@ -19,14 +18,16 @@ Object.assign( Menu, {
   create( props ) {
     let menu = Object.create( this )
     
-    DOMWidget.init.call( menu )
+    DOMWidget.create.call( menu )
 
     Object.assign( menu, Menu.defaults, props )
 
     menu.createOptions()
 
     menu.element.addEventListener( 'change', ( e )=> {
-      menu.value = e.target.value
+      menu.__value = e.target.value
+      menu.output()
+
       if( menu.onvaluechange !== null ) {
         menu.onvaluechange( menu.value  )
       }
@@ -61,4 +62,4 @@ Object.assign( Menu, {
 
 })
 
-module.exports = Menu
+export default Menu

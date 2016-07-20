@@ -1,8 +1,20 @@
 'use strict';
 
-var Utilities = require('./utilities.js'),
-    Widget = require('./widget.js'),
-    DOMWidget = Object.create(Widget);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _widget = require('./widget');
+
+var _widget2 = _interopRequireDefault(_widget);
+
+var _utilities = require('./utilities');
+
+var _utilities2 = _interopRequireDefault(_utilities);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var DOMWidget = Object.create(_widget2.default);
 
 Object.assign(DOMWidget, {
 
@@ -11,10 +23,10 @@ Object.assign(DOMWidget, {
     attached: false
   },
 
-  init: function init() {
-    var shouldUseTouch = Utilities.getMode() === 'touch';
+  create: function create() {
+    var shouldUseTouch = _utilities2.default.getMode() === 'touch';
 
-    Widget.init.call(this);
+    _widget2.default.create.call(this);
 
     Object.assign(this, DOMWidget.defaults);
 
@@ -54,4 +66,4 @@ Object.assign(DOMWidget, {
   }
 });
 
-module.exports = DOMWidget;
+exports.default = DOMWidget;

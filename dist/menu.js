@@ -1,9 +1,16 @@
 'use strict';
 
-var Widget = require('./widget.js'),
-    Utilities = require('./utilities.js'),
-    DOMWidget = require('./domWidget.js'),
-    Menu = Object.create(DOMWidget);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _domWidget = require('./domWidget');
+
+var _domWidget2 = _interopRequireDefault(_domWidget);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Menu = Object.create(_domWidget2.default);
 
 Object.assign(Menu, {
 
@@ -21,14 +28,16 @@ Object.assign(Menu, {
   create: function create(props) {
     var menu = Object.create(this);
 
-    DOMWidget.init.call(menu);
+    _domWidget2.default.create.call(menu);
 
     Object.assign(menu, Menu.defaults, props);
 
     menu.createOptions();
 
     menu.element.addEventListener('change', function (e) {
-      menu.value = e.target.value;
+      menu.__value = e.target.value;
+      menu.output();
+
       if (menu.onvaluechange !== null) {
         menu.onvaluechange(menu.value);
       }
@@ -80,4 +89,4 @@ Object.assign(Menu, {
   }
 });
 
-module.exports = Menu;
+exports.default = Menu;

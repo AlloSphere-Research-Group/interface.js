@@ -1,7 +1,6 @@
-let Panel = require( './panel.js' ),    
-    Communication
+import Widget from './widget'
 
-Communication = {
+let Communication = {
   Socket : null,
 
   init() {
@@ -63,16 +62,14 @@ Communication = {
       if( msg.address in this.callbacks ) {
         this.callbacks[ msg.address ]( msg.parameters )
       }else{
-        for( let panel of Panel.panels ) {
-          for( let child of panel ) {
-            //console.log( "CHECK", child.key, msg.address )
-            if( child.key === msg.address ) {
-              //console.log( child.key, msg.parameters )
-              child.setValue.apply( child, msg.parameters )
-              return
-            }
+        for( let widget of Widget.widgets ) {
+          //console.log( "CHECK", child.key, msg.address )
+          if( widget.key === msg.address ) {
+            //console.log( child.key, msg.parameters )
+            widget.setValue.apply( widget, msg.parameters )
+            return
           }
-        }
+        }    
 
         if( this.onmessage !== null ) { 
           this.receive( msg.address, msg.typetags, msg.parameters )
@@ -83,4 +80,4 @@ Communication = {
 
 }
 
-module.exports = Communication
+export default Communication

@@ -36,4 +36,4 @@ let WidgetLabel = {
 
 }
 
-module.exports = WidgetLabel
+export default WidgetLabel

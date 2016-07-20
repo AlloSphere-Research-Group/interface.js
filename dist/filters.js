@@ -1,5 +1,8 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 var Filters = {
   Scale: function Scale() {
     var inmin = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
@@ -17,4 +20,4 @@ var Filters = {
   }
 };
 
-module.exports = Filters;
+exports.default = Filters;

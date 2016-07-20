@@ -8,4 +8,4 @@ let Filters = {
   }
 }
 
-module.exports = Filters
+export default Filters

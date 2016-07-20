@@ -1,10 +1,26 @@
 'use strict';
 
-var Utilities = require('./utilities.js'),
-    Filters = require('./filters.js'),
-    Communication = require('./communication.js');
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _utilities = require('./utilities');
+
+var _utilities2 = _interopRequireDefault(_utilities);
+
+var _filters = require('./filters');
+
+var _filters2 = _interopRequireDefault(_filters);
+
+var _communication = require('./communication.js');
+
+var _communication2 = _interopRequireDefault(_communication);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Widget = {
+  // store all instantiated widgets
+  widgets: [],
 
   defaults: {
     min: 0, max: 1,
@@ -12,17 +28,24 @@ var Widget = {
     target: null
   },
 
-  init: function init() {
+  create: function create() {
     Object.assign(this, Widget.defaults);
 
     this.filters = [];
 
     // if min/max are not 0-1 and scaling is not disabled
     if (this.scaleOutput && (this.min !== 0 || this.max !== 1)) {
-      this.filters.push(Filters.Scale(0, 1, this.min, this.max));
+      this.filters.push(_filters2.default.Scale(0, 1, this.min, this.max));
     }
 
+    Widget.widgets.push(this);
+
     return this;
+  },
+  init: function init() {
+    if (this.target && this.target === 'osc' || this.target === 'midi') {
+      _communication2.default.init();
+    }
   },
   output: function output() {
     var value = this.__value;
@@ -59,9 +82,9 @@ var Widget = {
   },
   transmit: function transmit() {
     if (this.target === 'osc') {
-      Communication.OSC.send(this.address, this.value);
+      _communication2.default.OSC.send(this.address, this.value);
     }
   }
 };
 
-module.exports = Widget;
+exports.default = Widget;

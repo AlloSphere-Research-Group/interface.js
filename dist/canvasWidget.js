@@ -1,20 +1,33 @@
 'use strict';
 
-var Utilities = require('./utilities.js'),
-    DOMWidget = require('./domWidget.js'),
-    WidgetLabel = require('./widgetLabel.js'),
-    CanvasWidget = Object.create(DOMWidget);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _DOMWidget = require('./DOMWidget');
+
+var _DOMWidget2 = _interopRequireDefault(_DOMWidget);
+
+var _utilities = require('./utilities');
+
+var _utilities2 = _interopRequireDefault(_utilities);
+
+var _widgetLabel = require('./widgetLabel');
+
+var _widgetLabel2 = _interopRequireDefault(_widgetLabel);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var CanvasWidget = Object.create(_DOMWidget2.default);
 
 Object.assign(CanvasWidget, {
 
   defaults: {},
 
-  init: function init() {
-    var container = arguments.length <= 0 || arguments[0] === undefined ? window : arguments[0];
+  create: function create() {
+    var shouldUseTouch = _utilities2.default.getMode() === 'touch';
 
-    var shouldUseTouch = Utilities.getMode() === 'touch';
-
-    DOMWidget.init.call(this, container);
+    _DOMWidget2.default.create.call(this);
 
     Object.assign(this, CanvasWidget.defaults);
 
@@ -79,7 +92,7 @@ Object.assign(CanvasWidget, {
 
   addLabel: function addLabel() {
     var props = Object.assign({ ctx: this.ctx }, this.label),
-        label = WidgetLabel.create(props);
+        label = _widgetLabel2.default.create(props);
 
     this._label = label;
     this._draw = this.draw;
@@ -102,4 +115,4 @@ Object.assign(CanvasWidget, {
   }
 });
 
-module.exports = CanvasWidget;
+exports.default = CanvasWidget;

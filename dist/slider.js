@@ -1,9 +1,12 @@
 'use strict';
 
-var Widget = require('./widget.js'),
-    Utilities = require('./utilities.js'),
-    CanvasWidget = require('./canvasWidget.js'),
-    Slider = Object.create(CanvasWidget);
+var _canvasWidget = require('./canvasWidget.js');
+
+var _canvasWidget2 = _interopRequireDefault(_canvasWidget);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Slider = Object.create(_canvasWidget2.default);
 
 Object.assign(Slider, {
 
@@ -21,18 +24,19 @@ Object.assign(Slider, {
   },
 
   create: function create(props) {
-    var container = arguments.length <= 1 || arguments[1] === undefined ? window : arguments[1];
-
     var slider = Object.create(this);
 
     // apply Widget defaults, then overwrite (if applicable) with Slider defaults
-    CanvasWidget.init.call(slider, container);
+    _canvasWidget2.default.create.call(slider);
 
     // ...and then finally override with user defaults
     Object.assign(slider, Slider.defaults, props);
 
     // set underlying value if necessary... TODO: how should this be set given min/max?
     if (props.value) slider.__value = props.value;
+
+    // inherits from Widget
+    slider.init();
 
     return slider;
   },

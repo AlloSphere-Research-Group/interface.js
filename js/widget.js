@@ -1,8 +1,10 @@
-let Utilities = require( './utilities.js' ),
-    Filters = require( './filters.js' ),
-    Communication = require( './communication.js' )
+import Utilities from './utilities'
+import Filters from './filters'
+import Communication from './communication.js' 
 
 let Widget = {
+  // store all instantiated widgets
+  widgets: [],
 
   defaults: {
     min:0, max:1,
@@ -10,7 +12,7 @@ let Widget = {
     target:null
   },
 
-  init() {
+  create() {
     Object.assign( this, Widget.defaults )
 
     this.filters = []
@@ -22,7 +24,15 @@ let Widget = {
       )
     }
     
+    Widget.widgets.push( this )
+
     return this
+  },
+
+  init() {
+    if( this.target && this.target === 'osc' || this.target === 'midi' ) {
+      Communication.init()
+    }
   },
   
   output() {
@@ -44,4 +54,4 @@ let Widget = {
   }
 }
 
-module.exports = Widget
+export default Widget

@@ -1,9 +1,16 @@
 'use strict';
 
-var Panel = require('./panel.js'),
-    Communication = void 0;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-Communication = {
+var _widget = require('./widget');
+
+var _widget2 = _interopRequireDefault(_widget);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Communication = {
   Socket: null,
 
   init: function init() {
@@ -71,36 +78,14 @@ Communication = {
         var _iteratorError = undefined;
 
         try {
-          for (var _iterator = Panel.panels[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var panel = _step.value;
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
+          for (var _iterator = _widget2.default.widgets[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var widget = _step.value;
 
-            try {
-              for (var _iterator2 = panel[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                var child = _step2.value;
-
-                //console.log( "CHECK", child.key, msg.address )
-                if (child.key === msg.address) {
-                  //console.log( child.key, msg.parameters )
-                  child.setValue.apply(child, msg.parameters);
-                  return;
-                }
-              }
-            } catch (err) {
-              _didIteratorError2 = true;
-              _iteratorError2 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                  _iterator2.return();
-                }
-              } finally {
-                if (_didIteratorError2) {
-                  throw _iteratorError2;
-                }
-              }
+            //console.log( "CHECK", child.key, msg.address )
+            if (widget.key === msg.address) {
+              //console.log( child.key, msg.parameters )
+              widget.setValue.apply(widget, msg.parameters);
+              return;
             }
           }
         } catch (err) {
@@ -127,4 +112,4 @@ Communication = {
 
 };
 
-module.exports = Communication;
+exports.default = Communication;

@@ -1,10 +1,9 @@
 'use strict';
 
-var DOMWidget = require('./domWidget.js'),
-    CanvasWidget = require('./canvasWidget.js'),
-    Panel = void 0;
-
-Panel = {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Panel = {
   defaults: {
     fullscreen: false
   },
@@ -115,4 +114,4 @@ Panel = {
   }
 };
 
-module.exports = Panel;
+exports.default = Panel;

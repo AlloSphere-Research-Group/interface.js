@@ -1,6 +1,7 @@
-let Utilities   = require( './utilities.js' ),
-    Widget      = require( './widget.js' ),
-    DOMWidget   = Object.create( Widget )
+import Widget from './widget'
+import Utilities from './utilities'
+
+let  DOMWidget   = Object.create( Widget )
 
 Object.assign( DOMWidget, {
 
@@ -9,10 +10,10 @@ Object.assign( DOMWidget, {
     attached:false,
   },
 
-  init( ) {
+  create() {
     let shouldUseTouch = Utilities.getMode() === 'touch'
     
-    Widget.init.call( this )
+    Widget.create.call( this )
 
     Object.assign( this, DOMWidget.defaults )
 
@@ -52,4 +53,4 @@ Object.assign( DOMWidget, {
   
 })
 
-module.exports = DOMWidget
+export default DOMWidget

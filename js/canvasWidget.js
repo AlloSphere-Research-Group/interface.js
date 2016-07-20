@@ -1,16 +1,17 @@
-let Utilities    = require( './utilities.js' ),
-    DOMWidget    = require( './domWidget.js' ),
-    WidgetLabel  = require( './widgetLabel.js' ),
-    CanvasWidget = Object.create( DOMWidget )
+import DOMWidget from './DOMWidget'
+import Utilities from './utilities'
+import WidgetLabel from './widgetLabel'
+
+let CanvasWidget = Object.create( DOMWidget )
 
 Object.assign( CanvasWidget, {
 
   defaults: {},
 
-  init( container = window ) {
+  create() {
     let shouldUseTouch = Utilities.getMode() === 'touch'
     
-    DOMWidget.init.call( this, container )
+    DOMWidget.create.call( this )
 
     Object.assign( this, CanvasWidget.defaults )
 
@@ -77,4 +78,4 @@ Object.assign( CanvasWidget, {
   }
 })
 
-module.exports = CanvasWidget
+export default CanvasWidget

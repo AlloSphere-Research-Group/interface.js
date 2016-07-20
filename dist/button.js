@@ -1,9 +1,16 @@
 'use strict';
 
-var Widget = require('./widget.js'),
-    Utilities = require('./utilities.js'),
-    CanvasWidget = require('./canvasWidget.js'),
-    Button = Object.create(CanvasWidget);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _canvasWidget = require('./canvasWidget');
+
+var _canvasWidget2 = _interopRequireDefault(_canvasWidget);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Button = Object.create(_canvasWidget2.default);
 
 Object.assign(Button, {
 
@@ -23,7 +30,7 @@ Object.assign(Button, {
 
     var button = Object.create(this);
 
-    CanvasWidget.init.call(button, container);
+    _canvasWidget2.default.create.call(button, container);
 
     Object.assign(button, Button.defaults, props);
 
@@ -70,7 +77,7 @@ Object.assign(Button, {
         this.__value = 1;
       }
 
-      this.calculateOutput();
+      this.output();
       if (typeof this.onvaluechange === 'function') this.onvaluechange(this.value);
 
       this.draw();
@@ -82,7 +89,7 @@ Object.assign(Button, {
         window.removeEventListener('pointerup', this.pointerup);
 
         this.__value = 0;
-        this.calculateOutput();
+        this.output();
 
         if (typeof this.onvaluechange === 'function') this.onvaluechange(this.value);
         this.draw();
@@ -91,4 +98,4 @@ Object.assign(Button, {
   }
 });
 
-module.exports = Button;
+exports.default = Button;

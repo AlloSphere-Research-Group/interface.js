@@ -1,8 +1,4 @@
-let DOMWidget = require( './domWidget.js' ),
-    CanvasWidget = require( './canvasWidget.js' ),
-    Panel
-
-Panel = {
+let Panel = {
   defaults: {
     fullscreen:false
   },
@@ -87,4 +83,4 @@ Panel = {
 }
 
 
-module.exports = Panel 
+export default Panel 

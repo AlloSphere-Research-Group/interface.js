@@ -1,7 +1,6 @@
-let Widget = require( './widget.js' ),
-    Utilities = require( './utilities.js' ),
-    CanvasWidget = require( './canvasWidget.js' ),
-    Button = Object.create( CanvasWidget ) 
+import CanvasWidget from './canvasWidget'
+
+let Button = Object.create( CanvasWidget )
 
 Object.assign( Button, {
 
@@ -19,7 +18,7 @@ Object.assign( Button, {
   create( props, container = window ) {
     let button = Object.create( this )
     
-    CanvasWidget.init.call( button, container )
+    CanvasWidget.create.call( button, container )
 
     Object.assign( button, Button.defaults, props )
 
@@ -63,7 +62,7 @@ Object.assign( Button, {
         this.__value = 1
       }
       
-      this.calculateOutput()
+      this.output()
       if( typeof this.onvaluechange === 'function' ) this.onvaluechange( this.value ) 
 
       this.draw()
@@ -76,7 +75,7 @@ Object.assign( Button, {
         window.removeEventListener( 'pointerup',   this.pointerup )
 
         this.__value = 0
-        this.calculateOutput()
+        this.output()
 
         if( typeof this.onvaluechange === 'function' ) this.onvaluechange( this.value ) 
         this.draw()
@@ -85,4 +84,4 @@ Object.assign( Button, {
   }
 })
 
-module.exports = Button
+export default Button

@@ -1,7 +1,6 @@
-let Widget = require( './widget.js' ),
-    Utilities = require( './utilities.js' ),
-    CanvasWidget = require( './canvasWidget.js' ),
-    Slider = Object.create( CanvasWidget ) 
+import CanvasWidget from './canvasWidget.js'
+
+let Slider = Object.create( CanvasWidget ) 
 
 Object.assign( Slider, {
 
@@ -18,17 +17,20 @@ Object.assign( Slider, {
     style:  'horizontal'
   },
   
-  create( props, container = window ) {
+  create( props ) {
     let slider = Object.create( this )
     
     // apply Widget defaults, then overwrite (if applicable) with Slider defaults
-    CanvasWidget.init.call( slider, container )
+    CanvasWidget.create.call( slider )
 
     // ...and then finally override with user defaults
     Object.assign( slider, Slider.defaults, props )
 
     // set underlying value if necessary... TODO: how should this be set given min/max?
     if( props.value ) slider.__value = props.value
+    
+    // inherits from Widget
+    slider.init()
 
     return slider
   },
