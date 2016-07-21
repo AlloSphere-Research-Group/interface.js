@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _canvasWidget = require('./canvasWidget');
+var _canvasWidget = require('./canvasWidget.js');
 
 var _canvasWidget2 = _interopRequireDefault(_canvasWidget);
 
@@ -42,9 +42,9 @@ Object.assign(Button, {
     this.ctx.fillStyle = this.__value === 1 ? this.fill : this.background;
     this.ctx.strokeStyle = this.stroke;
     this.ctx.lineWidth = this.borderWidth;
-    this.ctx.fillRect(0, 0, this.__width, this.__height);
+    this.ctx.fillRect(0, 0, this.rect.width, this.rect.height);
 
-    this.ctx.strokeRect(0, 0, this.__width, this.__height);
+    this.ctx.strokeRect(0, 0, this.rect.width, this.rect.height);
   },
   addEvents: function addEvents() {
     for (var key in this.events) {

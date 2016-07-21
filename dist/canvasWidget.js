@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _DOMWidget = require('./DOMWidget');
+var _domWidget = require('./domWidget');
 
-var _DOMWidget2 = _interopRequireDefault(_DOMWidget);
+var _domWidget2 = _interopRequireDefault(_domWidget);
 
 var _utilities = require('./utilities');
 
@@ -18,23 +18,47 @@ var _widgetLabel2 = _interopRequireDefault(_widgetLabel);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var CanvasWidget = Object.create(_DOMWidget2.default);
+/**
+ * CanvasWidget is the base class for widgets that use HTML canvas elements.
+ * @module CanvasWidget
+ * @augments DOMWidget
+ */
+
+var CanvasWidget = Object.create(_domWidget2.default);
 
 Object.assign(CanvasWidget, {
+  /** @lends CanvasWidget.prototype */
 
-  defaults: {},
+  /**
+   * Create a new CanvasWidget instance
+   * @memberof CanvasWidget
+   * @constructs
+   * @static
+   */
 
   create: function create() {
     var shouldUseTouch = _utilities2.default.getMode() === 'touch';
 
-    _DOMWidget2.default.create.call(this);
+    _domWidget2.default.create.call(this);
 
-    Object.assign(this, CanvasWidget.defaults);
-
+    /**
+     * Store a reference to the canvas 2D context.
+     * @memberof CanvasWidget
+     * @instance
+     * @type {CanvasRenderingContext2D}
+     */
     this.ctx = this.element.getContext('2d');
 
     this.applyHandlers(shouldUseTouch);
   },
+
+
+  /**
+   * Create a the <canvas> element used by the widget and set
+   * some default CSS values.
+   * @memberof CanvasWidget
+   * @static
+   */
   createElement: function createElement() {
     var element = document.createElement('canvas');
     element.setAttribute('touch-action', 'none');

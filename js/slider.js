@@ -1,11 +1,23 @@
 import CanvasWidget from './canvasWidget.js'
 
+/**
+ * CanvasWidget is the base class for widgets that use HTML canvas elements.
+ * @module Slider
+ * @augments CanvasWidget
+ */ 
+
 let Slider = Object.create( CanvasWidget ) 
 
 Object.assign( Slider, {
+  /** @lends Slider.prototype */
 
-  // defaults are assigned to each widget, but can be overridden by
-  // user-defined properties passed to constructor
+  /**
+   * A set of default property settings for all Slider instances.
+   * Defaults can be overridden by user-defined properties passed to
+   * construtor.
+   * @memberof Slider
+   * @static
+   */  
   defaults: {
     __value:.5, // always 0-1, not for end-users
     value:.5,   // end-user value that may be filtered
@@ -16,7 +28,14 @@ Object.assign( Slider, {
     active: false,
     style:  'horizontal'
   },
-  
+
+  /**
+   * Create a new Slider instance.
+   * @memberof Slider
+   * @constructs
+   * @param {Object} [props] - A dictionary of properties to initialize Slider with.
+   * @static
+   */
   create( props ) {
     let slider = Object.create( this )
     
@@ -35,6 +54,11 @@ Object.assign( Slider, {
     return slider
   },
 
+  /**
+   * Draw the Slider onto its <canvas> element using the current .__value property.
+   * @memberof Slider
+   * @instance
+   */
   draw() {
     // draw background
     this.ctx.fillStyle   = this.background
@@ -89,14 +113,21 @@ Object.assign( Slider, {
       }
     },
   },
-
+  
+  /**
+   * Generates a value between 0-1 given the current pointer position in relation
+   * to the Slider's position, and triggers output.
+   * @instance
+   * @memberof Slider
+   * @param {PointerEvent} e - The pointer event to be processed.
+   */
   processPointerPosition( e ) {
     let prevValue = this.value
 
     if( this.style === 'horizontal' ) {
-      this.__value = ( e.clientX - this.rect.left ) / this.__width
+      this.__value = ( e.clientX - this.rect.left ) / this.rect.width
     }else{
-      this.__value = 1 - ( e.clientY - this.rect.top  ) / this.__height  
+      this.__value = 1 - ( e.clientY - this.rect.top  ) / this.rect.height 
     }
 
     // clamp __value, which is only used internally

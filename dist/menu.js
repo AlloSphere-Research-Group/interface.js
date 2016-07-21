@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _domWidget = require('./domWidget');
+var _domWidget = require('./domWidget.js');
 
 var _domWidget2 = _interopRequireDefault(_domWidget);
 

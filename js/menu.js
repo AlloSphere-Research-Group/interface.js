@@ -1,4 +1,4 @@
-import DOMWidget from './domWidget'
+import DOMWidget from './domWidget.js'
 
 let Menu = Object.create( DOMWidget ) 
 

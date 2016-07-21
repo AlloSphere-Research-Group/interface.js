@@ -1,25 +1,46 @@
-import DOMWidget from './DOMWidget'
+import DOMWidget from './domWidget'
 import Utilities from './utilities'
 import WidgetLabel from './widgetLabel'
+
+/**
+ * CanvasWidget is the base class for widgets that use HTML canvas elements.
+ * @module CanvasWidget
+ * @augments DOMWidget
+ */ 
 
 let CanvasWidget = Object.create( DOMWidget )
 
 Object.assign( CanvasWidget, {
+  /** @lends CanvasWidget.prototype */
 
-  defaults: {},
-
+  /**
+   * Create a new CanvasWidget instance
+   * @memberof CanvasWidget
+   * @constructs
+   * @static
+   */
   create() {
     let shouldUseTouch = Utilities.getMode() === 'touch'
     
     DOMWidget.create.call( this )
 
-    Object.assign( this, CanvasWidget.defaults )
-
+    /**
+     * Store a reference to the canvas 2D context.
+     * @memberof CanvasWidget
+     * @instance
+     * @type {CanvasRenderingContext2D}
+     */
     this.ctx = this.element.getContext( '2d' )
 
     this.applyHandlers( shouldUseTouch )
   },
 
+  /**
+   * Create a the <canvas> element used by the widget and set
+   * some default CSS values.
+   * @memberof CanvasWidget
+   * @static
+   */
   createElement() {
     let element = document.createElement( 'canvas' )
     element.setAttribute( 'touch-action', 'none' )
