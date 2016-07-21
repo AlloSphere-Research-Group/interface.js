@@ -7,7 +7,7 @@ var _canvasWidget2 = _interopRequireDefault(_canvasWidget);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * CanvasWidget is the base class for widgets that use HTML canvas elements.
+ * A horizontal or vertical fader. 
  * @module Slider
  * @augments CanvasWidget
  */
@@ -32,6 +32,13 @@ Object.assign(Slider, {
     stroke: '#aaa',
     borderWidth: 4,
     active: false,
+    /**
+     * The style property can be either 'horizontal' (the default) or 'vertical'. This
+     * determines the orientation of the Slider instance.
+     * @memberof Slider
+     * @instance
+     * @type {String}
+     */
     style: 'horizontal'
   },
 
@@ -62,7 +69,7 @@ Object.assign(Slider, {
 
 
   /**
-   * Draw the Slider onto its <canvas> element using the current .__value property.
+   * Draw the Slider onto its canvas context using the current .__value property.
    * @memberof Slider
    * @instance
    */
@@ -71,14 +78,14 @@ Object.assign(Slider, {
     this.ctx.fillStyle = this.background;
     this.ctx.strokeStyle = this.stroke;
     this.ctx.lineWidth = this.borderWidth;
-    this.ctx.fillRect(0, 0, this.__width, this.__height);
+    this.ctx.fillRect(0, 0, this.rect.width, this.rect.height);
 
     // draw fill (slider value representation)
     this.ctx.fillStyle = this.fill;
 
-    if (this.style === 'horizontal') this.ctx.fillRect(0, 0, this.__width * this.__value, this.__height);else this.ctx.fillRect(0, this.__height - this.__value * this.__height, this.__width, this.__height * this.__value);
+    if (this.style === 'horizontal') this.ctx.fillRect(0, 0, this.rect.width * this.__value, this.rect.height);else this.ctx.fillRect(0, this.rect.height - this.__value * this.rect.height, this.rect.width, this.rect.height * this.__value);
 
-    this.ctx.strokeRect(0, 0, this.__width, this.__height);
+    this.ctx.strokeRect(0, 0, this.rect.width, this.rect.height);
   },
   addEvents: function addEvents() {
     // create event handlers bound to the current object, otherwise

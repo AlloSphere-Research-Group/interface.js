@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PEP = exports.Communication = exports.Menu = exports.Button = exports.Slider = exports.Panel = undefined;
+exports.Communication = exports.Menu = exports.Button = exports.Slider = exports.Panel = undefined;
 
 var _panel = require('./panel');
 
@@ -38,4 +38,3 @@ exports.Slider = _slider2.default;
 exports.Button = _button2.default;
 exports.Menu = _menu2.default;
 exports.Communication = _communication2.default;
-exports.PEP = _pepjs2.default;

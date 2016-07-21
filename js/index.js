@@ -8,5 +8,5 @@ import Communication from './communication'
 import PEP from 'pepjs'
 
 export {
-  Panel, Slider, Button, Menu, Communication, PEP
+  Panel, Slider, Button, Menu, Communication
 }
