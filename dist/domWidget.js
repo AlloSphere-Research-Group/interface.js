@@ -25,7 +25,7 @@ Object.assign(DOMWidget, {
   /** @lends DOMWidget.prototype */
 
   /**
-   * A set of default property settings for all DOM widgets
+   * A set of default property settings for all DOMWidgets
    * @type {Object}
    * @static
    */

@@ -27,10 +27,6 @@ Object.assign(Slider, {
   defaults: {
     __value: .5, // always 0-1, not for end-users
     value: .5, // end-user value that may be filtered
-    background: '#333',
-    fill: '#777',
-    stroke: '#aaa',
-    borderWidth: 4,
     active: false,
     /**
      * The style property can be either 'horizontal' (the default) or 'vertical'. This
@@ -77,7 +73,7 @@ Object.assign(Slider, {
     // draw background
     this.ctx.fillStyle = this.background;
     this.ctx.strokeStyle = this.stroke;
-    this.ctx.lineWidth = this.borderWidth;
+    this.ctx.lineWidth = this.lineWidth;
     this.ctx.fillRect(0, 0, this.rect.width, this.rect.height);
 
     // draw fill (slider value representation)
@@ -143,14 +139,9 @@ Object.assign(Slider, {
     if (this.__value > 1) this.__value = 1;
     if (this.__value < 0) this.__value = 0;
 
-    this.output();
+    var shouldDraw = this.output();
 
-    if (prevValue !== this.value) {
-      if (typeof this.onvaluechange === 'function') {
-        this.onvaluechange(this.value, prevValue);
-      }
-      this.draw();
-    }
+    if (shouldDraw) this.draw();
   }
 });
 

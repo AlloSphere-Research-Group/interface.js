@@ -4,30 +4,57 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _canvasWidget = require('./canvasWidget.js');
+var _canvasWidget = require('./canvasWidget');
 
 var _canvasWidget2 = _interopRequireDefault(_canvasWidget);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * A Button with three different styles: 'momentary' triggers a flash and instaneous output, 
+ * 'hold' outputs the buttons maximum value until it is released, and 'toggle' alternates 
+ * between outputting maximum and minimum values on press. 
+ * 
+ * @module Button
+ * @augments CanvasWidget
+ */
+
 var Button = Object.create(_canvasWidget2.default);
 
 Object.assign(Button, {
 
+  /** @lends Button.prototype */
+
+  /**
+   * A set of default property settings for all Button instances.
+   * Defaults can be overridden by user-defined properties passed to
+   * construtor.
+   * @memberof Button
+   * @static
+   */
   defaults: {
     __value: 0,
     value: 0,
-    background: '#333',
-    fill: '#777',
-    stroke: '#aaa',
-    borderWidth: 4,
     active: false,
+
+    /**
+     * The style property can be 'momentary', 'hold', or 'toggle'. This
+     * determines the interaction of the Button instance.
+     * @memberof Button
+     * @instance
+     * @type {String}
+     */
     style: 'toggle'
   },
 
+  /**
+   * Create a new Button instance.
+   * @memberof Button
+   * @constructs
+   * @param {Object} [props] - A dictionary of properties to initialize a Button instance with.
+   * @static
+   */
   create: function create(props) {
-    var container = arguments.length <= 1 || arguments[1] === undefined ? window : arguments[1];
-
     var button = Object.create(this);
 
     _canvasWidget2.default.create.call(button, container);
@@ -38,10 +65,17 @@ Object.assign(Button, {
 
     return button;
   },
+
+
+  /**
+   * Draw the Button into its canvas context using the current .__value property and button style.
+   * @memberof Button
+   * @instance
+   */
   draw: function draw() {
     this.ctx.fillStyle = this.__value === 1 ? this.fill : this.background;
     this.ctx.strokeStyle = this.stroke;
-    this.ctx.lineWidth = this.borderWidth;
+    this.ctx.lineWidth = this.lineWidth;
     this.ctx.fillRect(0, 0, this.rect.width, this.rect.height);
 
     this.ctx.strokeRect(0, 0, this.rect.width, this.rect.height);
@@ -78,7 +112,6 @@ Object.assign(Button, {
       }
 
       this.output();
-      if (typeof this.onvaluechange === 'function') this.onvaluechange(this.value);
 
       this.draw();
     },
@@ -91,7 +124,6 @@ Object.assign(Button, {
         this.__value = 0;
         this.output();
 
-        if (typeof this.onvaluechange === 'function') this.onvaluechange(this.value);
         this.draw();
       }
     }

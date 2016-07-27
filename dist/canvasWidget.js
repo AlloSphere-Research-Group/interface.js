@@ -30,16 +30,28 @@ Object.assign(CanvasWidget, {
   /** @lends CanvasWidget.prototype */
 
   /**
+   * A set of default colors and canvas context properties for use in CanvasWidgets
+   * @type {Object}
+   * @static
+   */
+  defaults: {
+    background: '#333',
+    fill: '#777',
+    stroke: '#aaa',
+    lineWidth: 4
+  },
+  /**
    * Create a new CanvasWidget instance
    * @memberof CanvasWidget
    * @constructs
    * @static
    */
-
   create: function create() {
     var shouldUseTouch = _utilities2.default.getMode() === 'touch';
 
     _domWidget2.default.create.call(this);
+
+    Object.assign(this, CanvasWidget.defaults);
 
     /**
      * Store a reference to the canvas 2D context.
@@ -54,7 +66,7 @@ Object.assign(CanvasWidget, {
 
 
   /**
-   * Create a the <canvas> element used by the widget and set
+   * Create a the canvas element used by the widget and set
    * some default CSS values.
    * @memberof CanvasWidget
    * @static

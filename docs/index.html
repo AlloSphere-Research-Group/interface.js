@@ -111,9 +111,121 @@
                       <li class='h5'><span>Instance members</span></li>
                       
                       <li><a
+                        href='#CanvasWidget#defaults'
+                        class='regular pre-open'>
+                        #defaults
+                      </a></li>
+                      
+                      <li><a
                         href='#CanvasWidget#ctx'
                         class='regular pre-open'>
                         #ctx
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#button'
+                  class=" toggle-sibling">
+                  Button
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  <ul class='list-reset py1-ul pl1'>
+                    <li class='h5'><span>Static members</span></li>
+                    
+                      <li><a
+                        href='#Button.defaults'
+                        class='regular pre-open'>
+                        .defaults
+                      </a></li>
+                    
+                      <li><a
+                        href='#Button.create'
+                        class='regular pre-open'>
+                        .create
+                      </a></li>
+                    
+                    </ul>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#Button#style'
+                        class='regular pre-open'>
+                        #style
+                      </a></li>
+                      
+                      <li><a
+                        href='#Button#draw'
+                        class='regular pre-open'>
+                        #draw
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#menu'
+                  class=" toggle-sibling">
+                  Menu
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  <ul class='list-reset py1-ul pl1'>
+                    <li class='h5'><span>Static members</span></li>
+                    
+                      <li><a
+                        href='#Menu.defaults'
+                        class='regular pre-open'>
+                        .defaults
+                      </a></li>
+                    
+                      <li><a
+                        href='#Menu.create'
+                        class='regular pre-open'>
+                        .create
+                      </a></li>
+                    
+                    </ul>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#Menu#options'
+                        class='regular pre-open'>
+                        #options
+                      </a></li>
+                      
+                      <li><a
+                        href='#Menu#createElement'
+                        class='regular pre-open'>
+                        #createElement
+                      </a></li>
+                      
+                      <li><a
+                        href='#Menu#createOptions'
+                        class='regular pre-open'>
+                        #createOptions
                       </a></li>
                       
                     </ul>
@@ -683,7 +795,7 @@ to the Slider&#x27;s position, and triggers output.</p>
 
   
 
-  <p>Create a the <canvas> element used by the widget and set
+  <p>Create a the canvas element used by the widget and set
 some default CSS values.</p>
 
 
@@ -725,6 +837,51 @@ some default CSS values.</p>
     <div class='py1 quiet mt1 prose-big'>Instance Members</div>
     <div class="clearfix">
   
+    <div class='border-bottom' id='CanvasWidget#defaults'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>defaults</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>A set of default colors and canvas context properties for use in CanvasWidgets</p>
+
+
+  <div class='pre p1 fill-light mt0'>defaults</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
     <div class='border-bottom' id='CanvasWidget#ctx'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -741,6 +898,572 @@ some default CSS values.</p>
 
 
   <div class='pre p1 fill-light mt0'>ctx</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    <h3 class='fl m0' id='button'>
+      Button
+    </h3>
+    
+  </div>
+  
+
+  <p>A Button with three different styles: &#x27;momentary&#x27; triggers a flash and instaneous output,
+&#x27;hold&#x27; outputs the buttons maximum value until it is released, and &#x27;toggle&#x27; alternates
+between outputting maximum and minimum values on press.</p>
+
+
+  <div class='pre p1 fill-light mt0'>Button</div>
+
+  
+    <p>
+      Extends
+      
+        <a href="#canvaswidget">CanvasWidget</a>
+      
+    </p>
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='Button.defaults'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>defaults</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>A set of default property settings for all Button instances.
+Defaults can be overridden by user-defined properties passed to
+construtor.</p>
+
+
+  <div class='pre p1 fill-light mt0'>defaults</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Button.create'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>create([props])</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Create a new Button instance.</p>
+
+
+  <div class='pre p1 fill-light mt0'>create(props: [<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>])</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>props</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>])</code> A dictionary of properties to initialize a Button instance with.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='Button#style'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>style</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>The style property can be &#x27;momentary&#x27;, &#x27;hold&#x27;, or &#x27;toggle&#x27;. This
+determines the interaction of the Button instance.</p>
+
+
+  <div class='pre p1 fill-light mt0'>style</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Button#draw'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>draw()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Draw the Button into its canvas context using the current .__value property and button style.</p>
+
+
+  <div class='pre p1 fill-light mt0'>draw()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    <h3 class='fl m0' id='menu'>
+      Menu
+    </h3>
+    
+  </div>
+  
+
+  <p>A HTML select element, for picking items from a drop-down menu.</p>
+
+
+  <div class='pre p1 fill-light mt0'>Menu</div>
+
+  
+    <p>
+      Extends
+      
+        <a href="#domwidget">DOMWidget</a>
+      
+    </p>
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='Menu.defaults'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>defaults</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>A set of default property settings for all Menu instances.
+Defaults can be overridden by user-defined properties passed to
+construtor.</p>
+
+
+  <div class='pre p1 fill-light mt0'>defaults</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Menu.create'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>create([props])</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Create a new Menu instance.</p>
+
+
+  <div class='pre p1 fill-light mt0'>create(props: [<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>])</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>props</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>])</code> A dictionary of properties to initialize a Menu with.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='Menu#options'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>options</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>The options array stores the different possible values for the Menu
+widget. There are used to create HTML option elements which are then
+attached to the primary select element used by the Menu.</p>
+
+
+  <div class='pre p1 fill-light mt0'>options</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Menu#createElement'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>createElement()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Create primary DOM element (select) to be placed in a Panel.</p>
+
+
+  <div class='pre p1 fill-light mt0'>createElement()</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='Menu#createOptions'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>createOptions()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Generate option elements for menu. Removes previously appended elements.</p>
+
+
+  <div class='pre p1 fill-light mt0'>createOptions()</div>
 
   
 
@@ -980,7 +1703,7 @@ some default CSS values.</p>
 
   
 
-  <p>A set of default property settings for all DOM widgets</p>
+  <p>A set of default property settings for all DOMWidgets</p>
 
 
   <div class='pre p1 fill-light mt0'>defaults</div>

@@ -24,6 +24,9 @@
     "url": "https://github.com/AlloSphere-Research-Group/interface.js/issues"
   },
   "homepage": "https://github.com/AlloSphere-Research-Group/interface.js#readme",
+  "dependencies": {
+    "interface.server.monitor": "^0.0.1"
+  },
   "devDependencies": {
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",

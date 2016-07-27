@@ -17,6 +17,8 @@ let Widget = {
    * @static
    */  
   widgets: [],
+  lastValue: null,
+  onvaluechange: null,
 
   /**
    * A set of default property settings for all widgets
@@ -67,7 +69,7 @@ let Widget = {
 
   init() {
     if( this.target && this.target === 'osc' || this.target === 'midi' ) {
-      Communication.init()
+      if( !Communication.initialized ) Communication.init()
     }
   },
 
@@ -79,15 +81,22 @@ let Widget = {
    * @instance
    */
   output() {
-    let value = this.__value
+    let value = this.__value, newValueGenerated = false, lastValue = this.value
 
     for( let filter of this.filters ) value = filter( value )
 
     this.value = value
     
     if( this.target !== null ) this.transmit( this.value )
-  
-    return this.value
+
+    if( this.value !== this.lastValue ) {
+      newValueGenerated = true
+
+      if( this.onvaluechange !== null ) this.onvaluechange( this.value, lastValue )
+    }
+
+    // newValueGenerated can be use to determine if widget should draw
+    return newValueGenerated
   },
 
   /**

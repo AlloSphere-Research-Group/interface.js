@@ -12,10 +12,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Communication = {
   Socket: null,
+  initialized: false,
 
   init: function init() {
+    var _this = this;
+
     this.Socket = new WebSocket(this.getServerAddress());
     this.Socket.onmessage = this.onmessage;
+
+    var fullLocation = window.location.toString(),
+        locationSplit = fullLocation.split('/'),
+        interfaceName = locationSplit[locationSplit.length - 1];
+
+    this.Socket.onopen = function () {
+      _this.Socket.send(JSON.stringify({ type: 'meta', interfaceName: interfaceName, key: 'register' }));
+    };
+
+    this.initialized = true;
   },
   getServerAddress: function getServerAddress() {
     var expr = void 0,

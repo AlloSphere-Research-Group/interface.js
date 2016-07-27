@@ -2,10 +2,21 @@ import Widget from './widget'
 
 let Communication = {
   Socket : null,
+  initialized: false,
 
   init() {
     this.Socket = new WebSocket( this.getServerAddress() )
     this.Socket.onmessage = this.onmessage
+
+    let fullLocation = window.location.toString(),
+        locationSplit = fullLocation.split( '/' ),
+        interfaceName = locationSplit[ locationSplit.length - 1 ]
+    
+    this.Socket.onopen = ()=> {
+      this.Socket.send( JSON.stringify({ type:'meta', interfaceName, key:'register' }) )
+    }
+
+    this.initialized = true
   },
 
   getServerAddress() {

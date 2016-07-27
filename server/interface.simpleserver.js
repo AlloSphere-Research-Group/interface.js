@@ -4,21 +4,26 @@ let fs                = require( 'fs' ),
     ws                = require( 'ws' ),
     url               = require( 'url' ),
     server            = require( 'http' ).createServer(),
+    monitorServer     = require( 'http' ).createServer(),
     connect           = require( 'connect' ),
     directory         = require( 'serve-index' ),
     serve_static      = require( 'serve-static' ),
     oscMin            = require( 'osc-min' ),
     parseArgs         = require( 'minimist' ),
     udp               = require( 'dgram' ),
+    monitorApp        = connect(),
     app               = connect(),
     midi              = null,   
     args              = parseArgs( process.argv.slice(2) ),
     webServerPort     = args.serverPort || 8080,
     oscOutPort        = args.oscOutPort || webServerPort + 1,
     oscInPort         = args.oscInPort  || webServerPort + 2,
+    monitorPort       = args.monitorPort || webServerPort + 3,
     outputIPAddress   = args.outputIPAddress || null,
     appendID          = args.appendID   || false,
     clients_in        = new ws.Server({ server:server }),
+    monitorWS         = new ws.Server({ server:monitorServer }),
+    monitorClients    = [],
     clients           = {},
     root              = args.interfaceDirectory || __dirname + '/../',
     midiInit          = false,
@@ -32,6 +37,7 @@ let fs                = require( 'fs' ),
       "programchange" : 0xC0,
     },
     osc,
+    monitors = [],
     idNumber = 0;
     
 if( args.useMIDI === true ) midi = require( 'midi' )
@@ -46,6 +52,12 @@ app
 
 server.on( 'request', app )
 server.listen( webServerPort )
+
+console.log( __dirname )
+
+monitorApp.use( serve_static( __dirname + '/node_modules/interface.server.monitor/'  ) )
+monitorServer.on( 'request', monitorApp )
+monitorServer.listen( monitorPort )
 
 /*
  * Create OSC input port for bi-directional communication
@@ -77,6 +89,38 @@ osc = udp.createSocket( 'udp4', function( _msg, rinfo ) {
 
 osc.bind( oscInPort )
 
+monitorWS.on( 'connection', function ( monitorSocket ) {
+  monitorClients.push( monitorSocket )
+
+  monitorSocket.monitoredClients = []
+
+  monitorSocket.on( 'close', ws => {
+    console.log( 'CLOSING MONITOR', monitorClients.indexOf( monitorSocket ) )
+    monitorClients.splice( monitorClients.indexOf( monitorSocket ), 1 )
+  })
+
+  monitorSocket.on( 'message', msgData => {
+    let msg = JSON.parse( msgData )
+    
+    switch( msg.key ) {
+      case 'monitor.start' :
+        monitorSocket.monitoredClients.push( clients[ msg.data ] )
+        break;
+      case 'monitor.end' :
+        let client = clients[ msg.data ],
+            idx = monitorSocket.monitoredClients.indexOf( client )
+
+        if( idx > -1 ) {
+          monitorSocket.monitoredClients.splice( idx, 1 )
+        }
+        break;
+
+      default: break;
+    }
+  })
+
+})
+
 /*
  * Define WebSocket interaction.
 */
@@ -93,7 +137,7 @@ clients_in.on( 'connection', function ( socket ) {
   socket.on( 'message', function( obj ) {
     let msg = JSON.parse( obj );
 
-    if(msg.type === 'osc') {
+    if( msg.type === 'osc' ) {
       if( args.appendID ) {  // append client id
         msg.parameters.push( socket.idNumber )
       }
@@ -102,6 +146,13 @@ clients_in.on( 'connection', function ( socket ) {
         args: msg.parameters
       })
       
+      for( let monitor of monitorClients ) {
+        if( monitor.monitoredClients.indexOf( socket ) > -1 ) {
+          msg.id = socket.idNumber
+          monitor.send( JSON.stringify({ type:'monitoring', data: msg }) )
+        }
+      }
+
       osc.send( buf, 0, buf.length, oscOutPort, outputIPAddress || 'localhost')
     }else if( msg.type === 'midi' && midi !== null ) {
       if( !midiInit ) {
@@ -121,6 +172,17 @@ clients_in.on( 'connection', function ( socket ) {
           clients[ key ].send( JSON.stringify({ type:'socket', address:msg.address, parameters:msg.parameters }) )
         }
       }
+    }else if( msg.type === 'meta' ) {
+      switch( msg.key ) {
+        case 'register':
+          for( let monitor of monitorClients ) {
+            if( monitor.readyState === ws.OPEN )  
+              monitor.send( JSON.stringify({ type:'newClient', ip:socket.ip, id:socket.idNumber, interfaceName:msg.interfaceName }) )
+          }
+          break;
+      } 
+
     }
   })
+
 });
