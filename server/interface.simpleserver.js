@@ -53,8 +53,6 @@ app
 server.on( 'request', app )
 server.listen( webServerPort )
 
-console.log( __dirname )
-
 monitorApp.use( serve_static( __dirname + '/node_modules/interface.server.monitor/'  ) )
 monitorServer.on( 'request', monitorApp )
 monitorServer.listen( monitorPort )
@@ -95,7 +93,6 @@ monitorWS.on( 'connection', function ( monitorSocket ) {
   monitorSocket.monitoredClients = []
 
   monitorSocket.on( 'close', ws => {
-    console.log( 'CLOSING MONITOR', monitorClients.indexOf( monitorSocket ) )
     monitorClients.splice( monitorClients.indexOf( monitorSocket ), 1 )
   })
 
@@ -133,6 +130,23 @@ clients_in.on( 'connection', function ( socket ) {
   clients[ idNumber ] = socket
   socket.ip = clientIP
   socket.idNumber = idNumber++
+
+  socket.on( 'close', ()=> {
+    let client = clients[ socket.idNumber ]
+
+    for( let monitor of monitorClients ) {
+      if( monitor.readyState === ws.OPEN ) {
+        monitor.send( JSON.stringify({ type:'removeClient', id:socket.idNumber }) )
+
+        let idx = monitor.monitoredClients.indexOf( client )
+
+        if( idx > -1 ) {
+          monitor.monitoredClients.splice( idx, 1 )
+        }
+      }
+    }
+    delete clients[ idNumber ]
+  })
   
   socket.on( 'message', function( obj ) {
     let msg = JSON.parse( obj );
