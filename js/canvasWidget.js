@@ -22,7 +22,11 @@ Object.assign( CanvasWidget, {
     background:'#888',
     fill:'#aaa',
     stroke:'rgba(255,255,255,.3)',
-    lineWidth:4
+    lineWidth:4,
+    defaultLabel: {
+      x:.5, y:.5, align:'center', width:1, text:'demo'
+    },
+    shouldDisplayValue:false
   },
   /**
    * Create a new CanvasWidget instance
@@ -86,14 +90,14 @@ Object.assign( CanvasWidget, {
   },
 
   addLabel() {
-    let props = Object.assign( { ctx: this.ctx }, this.label ),
+    let props = Object.assign( { ctx: this.ctx }, this.label || this.defaultLabel ),
         label = WidgetLabel.create( props )
 
-    this._label = label
+    this.label = label
     this._draw = this.draw
     this.draw = function() {
       this._draw()
-      this._label.draw()
+      this.label.draw()
     }
   },
 
@@ -105,8 +109,13 @@ Object.assign( CanvasWidget, {
     // called if widget uses DOMWidget as prototype; .place inherited from DOMWidget
     this.place() 
 
-    if( this.label ) this.addLabel()
-
+    if( this.label || this.shouldDisplayValue ) this.addLabel()
+    if( this.shouldDisplayValue ) {
+      this.__postfilters.push( ( value ) => { 
+        this.label.text = value.toFixed( 5 )
+        return value
+      })
+    }
     this.draw()     
 
   }

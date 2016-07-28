@@ -14,21 +14,22 @@
       x:0,y:0,
       width:.33, height:1,
       fill:'#f00',
-      onvaluechange: function( value, prev ) { console.log( '1:', value, prev ) }
+      shouldDisplayValue:true,
     })
 
     var knob2 = Interface.Knob.create({ 
       x:.33,y:0,
       width:.33, height:1,
       fill:'#00f',
-      onvaluechange: function( value, prev ) { console.log( '2:', value, prev ) }
+      shouldDisplayValue:true,
     })
 
     var knob3 = Interface.Knob.create({ 
       x:.66,y:0,
       width:.33, height:1,
       fill:'#0f0',
-      onvaluechange: function( value, prev ) { console.log( '3:', value, prev ) }
+      shouldDisplayValue:true,
+      min:0, max:127
     })
     panel.add( knob1,knob2,knob3 )
 

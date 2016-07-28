@@ -5,7 +5,7 @@ let Filters = {
         rangeRatio = outrange / inrange
 
     return input => outmin + input * rangeRatio
-  }
+  },
 }
 
 export default Filters

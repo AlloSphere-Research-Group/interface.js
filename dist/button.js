@@ -57,7 +57,7 @@ Object.assign(Button, {
   create: function create(props) {
     var button = Object.create(this);
 
-    _canvasWidget2.default.create.call(button, container);
+    _canvasWidget2.default.create.call(button);
 
     Object.assign(button, Button.defaults, props);
 

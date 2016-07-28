@@ -40,7 +40,8 @@ var Widget = {
   defaults: {
     min: 0, max: 1,
     scaleOutput: true, // apply scale filter by default for min / max ranges
-    target: null
+    target: null,
+    __prevValue: null
   },
 
   /**
@@ -59,10 +60,8 @@ var Widget = {
      */
     this.filters = [];
 
-    // if min/max are not 0-1 and scaling is not disabled
-    if (this.scaleOutput && (this.min !== 0 || this.max !== 1)) {
-      this.filters.push(_filters2.default.Scale(0, 1, this.min, this.max));
-    }
+    this.__prefilters = [];
+    this.__postfilters = [];
 
     Widget.widgets.push(this);
 
@@ -81,6 +80,11 @@ var Widget = {
   init: function init() {
     if (this.target && this.target === 'osc' || this.target === 'midi') {
       if (!_communication2.default.initialized) _communication2.default.init();
+    }
+
+    // if min/max are not 0-1 and scaling is not disabled
+    if (this.scaleOutput && (this.min !== 0 || this.max !== 1)) {
+      this.__prefilters.push(_filters2.default.Scale(0, 1, this.min, this.max));
     }
   },
 
@@ -102,7 +106,7 @@ var Widget = {
     var _iteratorError = undefined;
 
     try {
-      for (var _iterator = this.filters[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (var _iterator = this.__prefilters[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var filter = _step.value;
         value = filter(value);
       }
@@ -121,16 +125,65 @@ var Widget = {
       }
     }
 
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+      for (var _iterator2 = this.filters[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var _filter = _step2.value;
+        value = _filter(value);
+      }
+    } catch (err) {
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+          _iterator2.return();
+        }
+      } finally {
+        if (_didIteratorError2) {
+          throw _iteratorError2;
+        }
+      }
+    }
+
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+      for (var _iterator3 = this.__postfilters[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var _filter2 = _step3.value;
+        value = _filter2(value);
+      }
+    } catch (err) {
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+          _iterator3.return();
+        }
+      } finally {
+        if (_didIteratorError3) {
+          throw _iteratorError3;
+        }
+      }
+    }
+
     this.value = value;
 
     if (this.target !== null) this.transmit(this.value);
 
-    if (this.value !== this.lastValue) {
+    if (this.__value !== this.__prevValue) {
       newValueGenerated = true;
 
       if (this.onvaluechange !== null) this.onvaluechange(this.value, lastValue);
     }
 
+    this.__prevValue = this.__value;
     // newValueGenerated can be use to determine if widget should draw
     return newValueGenerated;
   },

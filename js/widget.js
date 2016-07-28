@@ -28,7 +28,8 @@ let Widget = {
   defaults: {
     min:0, max:1,
     scaleOutput:true, // apply scale filter by default for min / max ranges
-    target:null
+    target:null,
+    __prevValue:null
   },
   
   /**
@@ -47,13 +48,9 @@ let Widget = {
      */
     this.filters = []
 
-    // if min/max are not 0-1 and scaling is not disabled
-    if( this.scaleOutput && (this.min !== 0 || this.max !== 1 )) {      
-      this.filters.push( 
-        Filters.Scale( 0,1,this.min,this.max ) 
-      )
-    }
-    
+    this.__prefilters = []
+    this.__postfilters = []
+
     Widget.widgets.push( this )
 
     return this
@@ -71,6 +68,13 @@ let Widget = {
     if( this.target && this.target === 'osc' || this.target === 'midi' ) {
       if( !Communication.initialized ) Communication.init()
     }
+
+    // if min/max are not 0-1 and scaling is not disabled
+    if( this.scaleOutput && (this.min !== 0 || this.max !== 1 )) {      
+      this.__prefilters.push( 
+        Filters.Scale( 0,1,this.min,this.max ) 
+      )
+    }
   },
 
   /**
@@ -82,19 +86,22 @@ let Widget = {
    */
   output() {
     let value = this.__value, newValueGenerated = false, lastValue = this.value
-
-    for( let filter of this.filters ) value = filter( value )
+    
+    for( let filter of this.__prefilters )  value = filter( value )
+    for( let filter of this.filters )       value = filter( value )
+    for( let filter of this.__postfilters ) value = filter( value )
 
     this.value = value
     
     if( this.target !== null ) this.transmit( this.value )
 
-    if( this.value !== this.lastValue ) {
+    if( this.__value !== this.__prevValue ) {
       newValueGenerated = true
 
       if( this.onvaluechange !== null ) this.onvaluechange( this.value, lastValue )
     }
 
+    this.__prevValue = this.__value
     // newValueGenerated can be use to determine if widget should draw
     return newValueGenerated
   },

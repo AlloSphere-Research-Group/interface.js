@@ -76,10 +76,8 @@ Object.assign( DOMWidget, {
     
     if( this.isSquare ) {
       if( height > width ) {
-        console.log( height, width )
         height = width
       }else{
-        console.log( 'width > height', width, height )
         width = height
       }
     }

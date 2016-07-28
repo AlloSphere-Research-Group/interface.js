@@ -47,7 +47,7 @@ Object.assign( Button, {
   create( props ) {
     let button = Object.create( this )
     
-    CanvasWidget.create.call( button, container )
+    CanvasWidget.create.call( button )
 
     Object.assign( button, Button.defaults, props )
 

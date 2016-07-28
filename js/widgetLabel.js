@@ -5,6 +5,7 @@ let WidgetLabel = {
     face:'sans-serif',
     fill:'white',
     align:'center',
+    background:null,
     width:1
   },
 
@@ -27,6 +28,11 @@ let WidgetLabel = {
         x      = this.x * cwidth,
         y      = this.y * cheight,
         width  = this.width * cwidth
+
+    if( this.background !== null ) {
+      this.ctx.fillStyle = this.background
+      this.ctx.fillRect( x,y,width,this.size + 10 )
+    }
     
     this.ctx.fillStyle = this.fill
     this.ctx.textAlign = this.align

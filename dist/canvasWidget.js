@@ -38,7 +38,11 @@ Object.assign(CanvasWidget, {
     background: '#888',
     fill: '#aaa',
     stroke: 'rgba(255,255,255,.3)',
-    lineWidth: 4
+    lineWidth: 4,
+    defaultLabel: {
+      x: .5, y: .5, align: 'center', width: 1, text: 'demo'
+    },
+    shouldDisplayValue: false
   },
   /**
    * Create a new CanvasWidget instance
@@ -127,17 +131,19 @@ Object.assign(CanvasWidget, {
   },
 
   addLabel: function addLabel() {
-    var props = Object.assign({ ctx: this.ctx }, this.label),
+    var props = Object.assign({ ctx: this.ctx }, this.label || this.defaultLabel),
         label = _widgetLabel2.default.create(props);
 
-    this._label = label;
+    this.label = label;
     this._draw = this.draw;
     this.draw = function () {
       this._draw();
-      this._label.draw();
+      this.label.draw();
     };
   },
   __addToPanel: function __addToPanel(panel) {
+    var _this2 = this;
+
     this.container = panel;
 
     if (typeof this.addEvents === 'function') this.addEvents();
@@ -145,8 +151,13 @@ Object.assign(CanvasWidget, {
     // called if widget uses DOMWidget as prototype; .place inherited from DOMWidget
     this.place();
 
-    if (this.label) this.addLabel();
-
+    if (this.label || this.shouldDisplayValue) this.addLabel();
+    if (this.shouldDisplayValue) {
+      this.__postfilters.push(function (value) {
+        _this2.label.text = value.toFixed(5);
+        return value;
+      });
+    }
     this.draw();
   }
 });
