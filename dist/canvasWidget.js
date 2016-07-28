@@ -35,9 +35,9 @@ Object.assign(CanvasWidget, {
    * @static
    */
   defaults: {
-    background: '#333',
-    fill: '#777',
-    stroke: '#aaa',
+    background: '#888',
+    fill: '#aaa',
+    stroke: 'rgba(255,255,255,.3)',
     lineWidth: 4
   },
   /**

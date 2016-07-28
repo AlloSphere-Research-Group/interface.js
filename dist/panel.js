@@ -5,7 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 var Panel = {
   defaults: {
-    fullscreen: false
+    fullscreen: false,
+    background: '#333'
   },
 
   // class variable for reference to all panels
@@ -32,7 +33,7 @@ var Panel = {
         children: []
       });
 
-      panel.div = Panel.__createHTMLElement();
+      panel.div = panel.__createHTMLElement();
       panel.layout();
 
       var body = document.querySelector('body');
@@ -47,6 +48,7 @@ var Panel = {
     var div = document.createElement('div');
     div.style.position = 'absolute';
     div.style.display = 'block';
+    div.style.backgroundColor = this.background;
 
     return div;
   },

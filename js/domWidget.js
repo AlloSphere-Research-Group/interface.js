@@ -70,15 +70,16 @@ Object.assign( DOMWidget, {
         x      = containerWidth  * this.x,
         y      = containerHeight * this.y
 
-
     if( !this.attached ) {
       this.attached = true
     }
     
     if( this.isSquare ) {
       if( height > width ) {
+        console.log( height, width )
         height = width
       }else{
+        console.log( 'width > height', width, height )
         width = height
       }
     }
