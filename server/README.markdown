@@ -4,7 +4,7 @@ This provides a simple server which hosts interfaces and transmits OSC messages.
 
 ## installation
 
-Run `npm install` from within the server directory.
+Run `npm install --dev` from within the server directory.
 
 ## start
 
