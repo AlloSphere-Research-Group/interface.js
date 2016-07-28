@@ -63,6 +63,8 @@ Object.assign(Button, {
 
     if (props.value) button.__value = props.value;
 
+    button.init();
+
     return button;
   },
 

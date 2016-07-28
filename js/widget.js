@@ -77,6 +77,14 @@ let Widget = {
     }
   },
 
+  runFilters( value, widget ) {
+    for( let filter of widget.__prefilters )  value = filter( value )
+    for( let filter of widget.filters )       value = filter( value )
+    for( let filter of widget.__postfilters ) value = filter( value )
+   
+    return value
+  },
+
   /**
    * Calculates output of widget by running .__value property through filter chain.
    * The result is stored in the .value property of the widget, which is then
@@ -85,12 +93,14 @@ let Widget = {
    * @instance
    */
   output() {
-    let value = this.__value, newValueGenerated = false, lastValue = this.value
-    
-    for( let filter of this.__prefilters )  value = filter( value )
-    for( let filter of this.filters )       value = filter( value )
-    for( let filter of this.__postfilters ) value = filter( value )
+    let value = this.__value, newValueGenerated = false, lastValue = this.value, w = this
 
+    if( Array.isArray( value ) ) {
+      value = value.map( v => Widget.runFilters( v, this ) )
+    }else{
+      value = this.runFilters( value, this )
+    }
+    
     this.value = value
     
     if( this.target !== null ) this.transmit( this.value )
