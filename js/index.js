@@ -6,7 +6,8 @@ import Button from './button'
 import Menu from './menu'
 import Communication from './communication'
 import PEP from 'pepjs'
+import Knob from './knob'
 
 export {
-  Panel, Slider, Button, Menu, Communication
+  Panel, Slider, Button, Menu, Communication, Knob
 }

@@ -89,6 +89,14 @@ Object.assign(DOMWidget, {
       this.attached = true;
     }
 
+    if (this.isSquare) {
+      if (height > width) {
+        height = width;
+      } else {
+        width = height;
+      }
+    }
+
     this.element.width = width;
     this.element.style.width = width + 'px';
     this.element.height = height;

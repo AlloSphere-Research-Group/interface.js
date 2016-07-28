@@ -30,12 +30,12 @@ Object.assign( CanvasWidget, {
    * @constructs
    * @static
    */
-  create() {
+  create( props ) {
     let shouldUseTouch = Utilities.getMode() === 'touch'
     
     DOMWidget.create.call( this )
 
-    Object.assign( this, CanvasWidget.defaults )
+    Object.assign( this, CanvasWidget.defaults)
 
     /**
      * Store a reference to the canvas 2D context.

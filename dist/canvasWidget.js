@@ -46,7 +46,7 @@ Object.assign(CanvasWidget, {
    * @constructs
    * @static
    */
-  create: function create() {
+  create: function create(props) {
     var shouldUseTouch = _utilities2.default.getMode() === 'touch';
 
     _domWidget2.default.create.call(this);

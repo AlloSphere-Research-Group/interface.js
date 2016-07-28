@@ -38,15 +38,58 @@ let fs                = require( 'fs' ),
     },
     osc,
     monitors = [],
+    template, templateSplit,
     idNumber = 0;
     
 if( args.useMIDI === true ) midi = require( 'midi' )
+
+template = fs.readFileSync( './template.htm', 'utf-8' );
+templateSplit = template.split( '\n' )
 
 /* 
  * Start web server running
 */
 
 app
+  .use( function( req, res, next ) {
+    req.uri = url.parse( req.url )
+
+    let pathSplit = req.uri.path.split( '/' ),
+        filename  = pathSplit[ pathSplit.length - 1 ],
+        extensionSplit = filename.split( '.' ),
+        isIJS = extensionSplit.indexOf( 'ijs' ) > -1
+
+    if( isIJS ) {
+      let ijsFile = fs.readFileSync( './' + filename, 'utf-8' ),
+          finalFile
+
+      templateSplit.splice( 8,1,ijsFile ),
+      finalFile = templateSplit.join( '\n' )
+
+      console.log( finalFile )
+
+      res.writeHead( 200, {
+        'Content-Type': 'text/html',
+        'Content-Length': finalFile.length
+      })
+      res.end( finalFile );
+
+      return;
+    }
+
+    //if( req.uri.pathname == "/interface.js" ) {
+    //  res.writeHead( 200, {
+    //    'Content-Type': 'text/javascript',
+    //    'Content-Length': interfaceJS.length
+    //  })
+    //  res.end( interfaceJS );
+
+    //  return;
+    //}
+
+    next();
+   
+  })
   .use( directory( root, { hidden:false,icons:true } ) )
   .use( serve_static( root ) )
 
