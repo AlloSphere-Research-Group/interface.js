@@ -2,6 +2,7 @@
 
 import Panel from './panel'
 import Slider from './slider'
+import Joystick from './joystick'
 import Button from './button'
 import Menu from './menu'
 import Communication from './communication'
@@ -9,5 +10,5 @@ import PEP from 'pepjs'
 import Knob from './knob'
 
 export {
-  Panel, Slider, Button, Menu, Communication, Knob
+  Panel, Slider, Joystick, Button, Menu, Communication, Knob
 }
