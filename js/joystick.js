@@ -1,32 +1,32 @@
 import CanvasWidget from './canvasWidget.js'
 
 /**
- * A horizontal or vertical fader. 
- * @module Slider
+ * A joystick that can be used to select an XY position and then snaps back. 
+ * @module Joystick
  * @augments CanvasWidget
  */ 
 
 let Joystick = Object.create( CanvasWidget ) 
 
 Object.assign( Joystick, {
-  /** @lends Slider.prototype */
+  /** @lends Joystick.prototype */
 
   /**
-   * A set of default property settings for all Slider instances.
+   * A set of default property settings for all Joystick instances.
    * Defaults can be overridden by user-defined properties passed to
    * construtor.
-   * @memberof Slider
+   * @memberof Joystick
    * @static
    */  
   defaults: {
-    __value:.5, // always 0-1, not for end-users
-    value:.5,   // end-user value that may be filtered
+    __value:[.5,.5], // always 0-1, not for end-users
+    value:[.5,.5],   // end-user value that may be filtered
     active: false,
   },
 
   /**
-   * Create a new Slider instance.
-   * @memberof Slider
+   * Create a new Joystick instance.
+   * @memberof Joystick
    * @constructs
    * @param {Object} [props] - A dictionary of properties to initialize Slider with.
    * @static
@@ -50,8 +50,8 @@ Object.assign( Joystick, {
   },
 
   /**
-   * Draw the Slider onto its canvas context using the current .__value property.
-   * @memberof Slider
+   * Draw the Joystick onto its canvas context using the current .__value property.
+   * @memberof Joystick
    * @instance
    */
   draw() {
@@ -66,9 +66,9 @@ Object.assign( Joystick, {
 
     this.ctx.beginPath();
     this.ctx.moveTo(this.rect.width*0.5,this.rect.height*.5);
-    this.ctx.lineTo(this.rect.width *this.__value, this.rect.height * this.__value);
+    this.ctx.lineTo(this.rect.width *this.__value[0], this.rect.height * this.__value[1]);
     this.ctx.stroke();
-    this.ctx.fillRect( this.rect.width * this.__value -12, this.rect.height * this.__value -12, 24, 24 )
+    this.ctx.fillRect( this.rect.width * this.__value[0] -12, this.rect.height * this.__value[1] -12, 24, 24 )
 
     this.ctx.strokeRect( 0,0, this.rect.width, this.rect.height )
   },
@@ -100,7 +100,7 @@ Object.assign( Joystick, {
         this.active = false
         window.removeEventListener( 'pointermove', this.pointermove ) 
         window.removeEventListener( 'pointerup',   this.pointerup ) 
-        this.__value = .5
+        this.__value = [.5,.5]
         this.output()
         this.draw()
       }
@@ -115,20 +115,22 @@ Object.assign( Joystick, {
   
   /**
    * Generates a value between 0-1 given the current pointer position in relation
-   * to the Slider's position, and triggers output.
+   * to the Joystick's position, and triggers output.
    * @instance
-   * @memberof Slider
+   * @memberof Joystick
    * @param {PointerEvent} e - The pointer event to be processed.
    */
   processPointerPosition( e ) {
 
-    this.__value = ( e.clientX - this.rect.left ) / this.rect.width
-//    this.__value[1] = 1 - ( e.clientY - this.rect.top  ) / this.rect.height 
+    this.__value[0] = ( e.clientX - this.rect.left ) / this.rect.width
+    this.__value[1] = ( e.clientY - this.rect.top  ) / this.rect.height 
     
 
     // clamp __value, which is only used internally
-    if( this.__value > 1 ) this.__value = 1
-    if( this.__value < 0 ) this.__value = 0
+    if( this.__value[0] > 1 ) this.__value[0] = 1
+    if( this.__value[1] > 1 ) this.__value[1] = 1
+    if( this.__value[0] < 0 ) this.__value[0] = 0
+    if( this.__value[1] < 0 ) this.__value[1] = 0
 
     let shouldDraw = this.output()
     

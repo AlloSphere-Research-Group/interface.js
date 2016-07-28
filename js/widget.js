@@ -86,18 +86,25 @@ let Widget = {
    */
   output() {
     let value = this.__value, newValueGenerated = false, lastValue = this.value
-    
-    for( let filter of this.__prefilters )  value = filter( value )
-    for( let filter of this.filters )       value = filter( value )
-    for( let filter of this.__postfilters ) value = filter( value )
+   
+    if (Array.isArray(this.value)){
+      for (let v in this.value){
+        for( let filter of this.__prefilters )  value = filter( v )
+        for( let filter of this.filters )       value = filter( v )
+        for( let filter of this.__postfilters ) value = filter( v )
+      }
+    } else {
+      for( let filter of this.__prefilters )  value = filter( value )
+      for( let filter of this.filters )       value = filter( value )
+      for( let filter of this.__postfilters ) value = filter( value )
+    } 
 
     this.value = value
     
     if( this.target !== null ) this.transmit( this.value )
 
-    if( this.__value !== this.__prevValue ) {
+    if( this.__value !== this.__prevValue || Array.isArray(this.__value) ) {
       newValueGenerated = true
-
       if( this.onvaluechange !== null ) this.onvaluechange( this.value, lastValue )
     }
 
@@ -113,10 +120,11 @@ let Widget = {
    * @instance
    */
   transmit() {
+   //looks like this should handle arrays, not tested
     if( this.target === 'osc' ) {
       Communication.OSC.send( this.address, this.value )
     }
-  }
+  },
 }
 
 export default Widget
