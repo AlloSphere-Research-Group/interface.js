@@ -80,10 +80,10 @@ Object.assign(DOMWidget, {
   place: function place() {
     var containerWidth = this.container.getWidth(),
         containerHeight = this.container.getHeight(),
-        width = containerWidth * this.width,
-        height = containerHeight * this.height,
-        x = containerWidth * this.x,
-        y = containerHeight * this.y;
+        width = this.width <= 1 ? containerWidth * this.width : this.width,
+        height = this.height <= 1 ? containerHeight * this.height : this.height,
+        x = this.x < 1 ? containerWidth * this.x : this.x,
+        y = this.y < 1 ? containerHeight * this.y : this.y;
 
     if (!this.attached) {
       this.attached = true;
