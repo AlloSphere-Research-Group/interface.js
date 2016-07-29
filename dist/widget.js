@@ -87,26 +87,13 @@ var Widget = {
       this.__prefilters.push(_filters2.default.Scale(0, 1, this.min, this.max));
     }
   },
-
-
-  /**
-   * Calculates output of widget by running .__value property through filter chain.
-   * The result is stored in the .value property of the widget, which is then
-   * returned.
-   * @memberof Widget
-   * @instance
-   */
-  output: function output() {
-    var value = this.__value,
-        newValueGenerated = false,
-        lastValue = this.value;
-
+  runFilters: function runFilters(value, widget) {
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
 
     try {
-      for (var _iterator = this.__prefilters[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (var _iterator = widget.__prefilters[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var filter = _step.value;
         value = filter(value);
       }
@@ -130,7 +117,7 @@ var Widget = {
     var _iteratorError2 = undefined;
 
     try {
-      for (var _iterator2 = this.filters[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      for (var _iterator2 = widget.filters[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
         var _filter = _step2.value;
         value = _filter(value);
       }
@@ -154,7 +141,7 @@ var Widget = {
     var _iteratorError3 = undefined;
 
     try {
-      for (var _iterator3 = this.__postfilters[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      for (var _iterator3 = widget.__postfilters[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
         var _filter2 = _step3.value;
         value = _filter2(value);
       }
@@ -171,6 +158,33 @@ var Widget = {
           throw _iteratorError3;
         }
       }
+    }
+
+    return value;
+  },
+
+
+  /**
+   * Calculates output of widget by running .__value property through filter chain.
+   * The result is stored in the .value property of the widget, which is then
+   * returned.
+   * @memberof Widget
+   * @instance
+   */
+  output: function output() {
+    var _this = this;
+
+    var value = this.__value,
+        newValueGenerated = false,
+        lastValue = this.value,
+        w = this;
+
+    if (Array.isArray(value)) {
+      value = value.map(function (v) {
+        return Widget.runFilters(v, _this);
+      });
+    } else {
+      value = this.runFilters(value, this);
     }
 
     this.value = value;

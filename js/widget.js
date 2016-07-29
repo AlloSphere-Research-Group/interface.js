@@ -77,6 +77,14 @@ let Widget = {
     }
   },
 
+  runFilters( value, widget ) {
+    for( let filter of widget.__prefilters )  value = filter( value )
+    for( let filter of widget.filters )       value = filter( value )
+    for( let filter of widget.__postfilters ) value = filter( value )
+   
+    return value
+  },
+
   /**
    * Calculates output of widget by running .__value property through filter chain.
    * The result is stored in the .value property of the widget, which is then
@@ -85,30 +93,28 @@ let Widget = {
    * @instance
    */
   output() {
-    let value = this.__value, newValueGenerated = false, lastValue = this.value
+    let value = this.__value, newValueGenerated = false, lastValue = this.value, w = this
    
-    if (Array.isArray(this.value)){
-      for (let v in this.value){
-        for( let filter of this.__prefilters )  value = filter( v )
-        for( let filter of this.filters )       value = filter( v )
-        for( let filter of this.__postfilters ) value = filter( v )
-      }
-    } else {
-      for( let filter of this.__prefilters )  value = filter( value )
-      for( let filter of this.filters )       value = filter( value )
-      for( let filter of this.__postfilters ) value = filter( value )
-    } 
-
+    if( Array.isArray( value ) ) {
+      value = value.map( v => Widget.runFilters( v, this ) )
+    }else{
+      value = this.runFilters( value, this )
+    }
+    
     this.value = value
     
     if( this.target !== null ) this.transmit( this.value )
 
-    if( this.__value !== this.__prevValue || Array.isArray(this.__value) ) {
+    if( this.__value !== this.__prevValue ) {
       newValueGenerated = true
       if( this.onvaluechange !== null ) this.onvaluechange( this.value, lastValue )
     }
 
-    this.__prevValue = this.__value
+    if (Array.isArray(this.__value)) {
+      this.__prevValue = this.__value.slice()
+    } else {
+      this.__prevValue = this.__value
+    }
     // newValueGenerated can be use to determine if widget should draw
     return newValueGenerated
   },
