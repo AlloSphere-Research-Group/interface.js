@@ -35,7 +35,7 @@ Object.assign(MultiButton, {
   defaults: {
     __value: [0, 0, 0, 0],
     value: [0, 0, 0, 0],
-    active: false,
+    active: [],
     rows: 2,
     columns: 2,
 
@@ -103,6 +103,15 @@ Object.assign(MultiButton, {
 
     this.element.addEventListener('pointerdown', this.pointerdown);
   },
+  getButtonNumFromEvent: function getButtonNumFromEvent(e) {
+    var rowSize = 1 / this.rows,
+        row = Math.floor(e.clientY / this.rect.height / rowSize),
+        columnSize = 1 / this.columns,
+        column = Math.floor(e.clientX / this.rect.width / columnSize),
+        buttonNum = row * this.columns + column;
+
+    return buttonNum;
+  },
 
 
   events: {
@@ -110,17 +119,14 @@ Object.assign(MultiButton, {
       var _this = this;
 
       // only hold needs to listen for pointerup events; toggle and momentary only care about pointerdown
+      var buttonNum = this.getButtonNumFromEvent(e);
+
       if (this.style === 'hold') {
-        this.active = true;
+        this.active.push({ id: e.pointerId, buttonNum: buttonNum });
         this.pointerId = e.pointerId;
+        window.addEventListener('pointermove', this.pointermove);
         window.addEventListener('pointerup', this.pointerup);
       }
-
-      var rowSize = 1 / this.rows,
-          row = Math.floor(e.clientY / this.rect.height / rowSize),
-          columnSize = 1 / this.columns,
-          column = Math.floor(e.clientX / this.rect.width / columnSize),
-          buttonNum = row * this.columns + column;
 
       if (this.style === 'toggle') {
         this.__value[buttonNum] = this.__value[buttonNum] === 1 ? 0 : 1;
@@ -137,13 +143,21 @@ Object.assign(MultiButton, {
 
       this.draw();
     },
+    pointermove: function pointermove(e) {
+      var buttonNum = this.getButtonNumFromEvent(e);
+    },
     pointerup: function pointerup(e) {
-      if (this.active && e.pointerId === this.pointerId && this.style === 'hold') {
-        this.active = false;
+      if (this.active.length && this.style === 'hold') {
+        var idx = this.active.findIndex(function (v) {
+          return v.id === e.pointerId;
+        });
+
+        this.__value[this.active[idx].buttonNum] = 0;
+        this.active.splice(idx, 1);
 
         window.removeEventListener('pointerup', this.pointerup);
+        window.removeEventListener('pointermove', this.pointermove);
 
-        this.__value = 0;
         this.output();
 
         this.draw();

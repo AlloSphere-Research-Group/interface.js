@@ -25,7 +25,7 @@ Object.assign( MultiButton, {
   defaults: {
     __value:[0,0,0,0,],
     value:[0,0,0,0],
-    active: false,
+    active: [],
     rows:2,
     columns:2,
 
@@ -94,20 +94,27 @@ Object.assign( MultiButton, {
     this.element.addEventListener( 'pointerdown',  this.pointerdown )
   },
 
+  getButtonNumFromEvent( e ) {
+    let rowSize = 1/this.rows,
+        row =  Math.floor( ( e.clientY / this.rect.height ) / rowSize ),
+        columnSize = 1/this.columns,
+        column =  Math.floor( ( e.clientX / this.rect.width ) / columnSize ),
+        buttonNum = row * this.columns + column
+
+     return buttonNum
+  },
+
   events: {
     pointerdown( e ) {
       // only hold needs to listen for pointerup events; toggle and momentary only care about pointerdown
+      let buttonNum = this.getButtonNumFromEvent( e )
+
       if( this.style === 'hold' ) {
-        this.active = true
+        this.active.push({ id:e.pointerId, buttonNum })
         this.pointerId = e.pointerId
+        window.addEventListener( 'pointermove', this.pointermove ) 
         window.addEventListener( 'pointerup', this.pointerup ) 
       }
-
-      let rowSize = 1/this.rows,
-          row =  Math.floor( ( e.clientY / this.rect.height ) / rowSize ),
-          columnSize = 1/this.columns,
-          column =  Math.floor( ( e.clientX / this.rect.width ) / columnSize ),
-          buttonNum = row * this.columns + column
 
       if( this.style === 'toggle' ) {
         this.__value[ buttonNum ] = this.__value[ buttonNum ] === 1 ? 0 : 1
@@ -123,13 +130,21 @@ Object.assign( MultiButton, {
       this.draw()
     },
 
+    pointermove( e ) {
+      let buttonNum = this.getButtonNumFromEvent( e )
+
+    },
+
     pointerup( e ) {
-      if( this.active && e.pointerId === this.pointerId && this.style === 'hold' ) {
-        this.active = false
+      if( this.active.length && this.style === 'hold' ) {
+        let idx = this.active.findIndex( v => v.id === e.pointerId )
+
+        this.__value[ this.active[ idx ].buttonNum ] = 0
+        this.active.splice( idx, 1 )
         
         window.removeEventListener( 'pointerup',   this.pointerup )
+        window.removeEventListener( 'pointermove', this.pointermove )
 
-        this.__value = 0
         this.output()
 
         this.draw()
