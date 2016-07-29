@@ -9,7 +9,8 @@ import Communication from './communication'
 import PEP from 'pepjs'
 import Knob from './knob'
 import MultiSlider from './multislider'
+import MultiButton from './multiButton'
 
 export {
-  Panel, Slider, Joystick, Button, Menu, Communication, Knob, MultiSlider
+  Panel, Slider, Joystick, Button, Menu, Communication, Knob, MultiSlider, MultiButton
 }
