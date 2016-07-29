@@ -33,12 +33,9 @@ Object.assign(MultiButton, {
    * @static
    */
   defaults: {
-    __value: [0, 0, 0, 0],
-    value: [0, 0, 0, 0],
-    active: [],
     rows: 2,
     columns: 2,
-
+    lastButton: null,
     /**
      * The style property can be 'momentary', 'hold', or 'toggle'. This
      * determines the interaction of the MultiButton instance.
@@ -63,7 +60,14 @@ Object.assign(MultiButton, {
 
     Object.assign(multiButton, MultiButton.defaults, props);
 
-    if (props.value) multiButton.__value = props.value;
+    if (props.value) {
+      multiButton.__value = props.value;
+    } else {
+      multiButton.__value = [];
+      multiButton.value = [];
+    }
+
+    multiButton.active = {};
 
     multiButton.init();
 
@@ -112,55 +116,105 @@ Object.assign(MultiButton, {
 
     return buttonNum;
   },
+  processButtonOn: function processButtonOn(buttonNum, e) {
+    var _this = this;
+
+    if (this.style === 'toggle') {
+      this.__value[buttonNum] = this.__value[buttonNum] === 1 ? 0 : 1;
+    } else if (this.style === 'momentary') {
+      this.__value[buttonNum] = 1;
+      setTimeout(function () {
+        _this.__value[buttonNum] = 0;
+        //let idx = this.active.findIndex( v => v.buttonNum === buttonNum )
+        //this.active.splice( idx, 1 )
+        _this.active[e.pointerId].splice(_this.active[e.pointerId].indexOf(buttonNum), 1);
+        _this.draw();
+      }, 50);
+    } else if (this.style === 'hold') {
+      this.__value[buttonNum] = 1;
+    }
+
+    this.output();
+
+    this.draw();
+  },
 
 
   events: {
     pointerdown: function pointerdown(e) {
-      var _this = this;
-
       // only hold needs to listen for pointerup events; toggle and momentary only care about pointerdown
       var buttonNum = this.getButtonNumFromEvent(e);
 
-      if (this.style === 'hold') {
-        this.active.push({ id: e.pointerId, buttonNum: buttonNum });
-        this.pointerId = e.pointerId;
-        window.addEventListener('pointermove', this.pointermove);
-        window.addEventListener('pointerup', this.pointerup);
-      }
+      this.active[e.pointerId] = [buttonNum];
+      this.active[e.pointerId].lastButton = buttonNum;
 
-      if (this.style === 'toggle') {
-        this.__value[buttonNum] = this.__value[buttonNum] === 1 ? 0 : 1;
-      } else if (this.style === 'momentary') {
-        this.__value[buttonNum] = 1;
-        setTimeout(function () {
-          _this.__value[buttonNum] = 0;_this.draw();
-        }, 50);
-      } else if (this.style === 'hold') {
-        this.__value[buttonNum] = 1;
-      }
+      window.addEventListener('pointermove', this.pointermove);
+      window.addEventListener('pointerup', this.pointerup);
 
-      this.output();
-
-      this.draw();
+      this.processButtonOn(buttonNum, e);
     },
     pointermove: function pointermove(e) {
       var buttonNum = this.getButtonNumFromEvent(e);
+
+      var checkForPressed = this.active[e.pointerId].indexOf(buttonNum),
+          lastButton = this.active[e.pointerId].lastButton;
+
+      if (checkForPressed === -1 && lastButton !== buttonNum) {
+
+        if (this.style === 'toggle' || this.style === 'hold') {
+          if (this.style === 'hold') {
+            this.__value[lastButton] = 0;
+          }
+          this.active[e.pointerId] = [buttonNum];
+        } else {
+          this.active[e.pointerId].push(buttonNum);
+        }
+        this.active[e.pointerId].lastButton = buttonNum;
+
+        this.processButtonOn(buttonNum, e);
+      }
     },
     pointerup: function pointerup(e) {
-      if (this.active.length && this.style === 'hold') {
-        var idx = this.active.findIndex(function (v) {
-          return v.id === e.pointerId;
-        });
-
-        this.__value[this.active[idx].buttonNum] = 0;
-        this.active.splice(idx, 1);
-
+      if (Object.keys(this.active).length) {
         window.removeEventListener('pointerup', this.pointerup);
         window.removeEventListener('pointermove', this.pointermove);
 
-        this.output();
+        if (this.style !== 'toggle') {
+          var buttonsForPointer = this.active[e.pointerId];
 
-        this.draw();
+          if (buttonsForPointer !== undefined) {
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+              for (var _iterator = buttonsForPointer[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var button = _step.value;
+
+                this.__value[button] = 0;
+              }
+            } catch (err) {
+              _didIteratorError = true;
+              _iteratorError = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                  _iterator.return();
+                }
+              } finally {
+                if (_didIteratorError) {
+                  throw _iteratorError;
+                }
+              }
+            }
+
+            delete this.active[e.pointerId];
+
+            this.output();
+
+            this.draw();
+          }
+        }
       }
     }
   }
