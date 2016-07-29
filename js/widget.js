@@ -130,7 +130,6 @@ let Widget = {
       }
     }
 
-
     // newValueGenerated can be use to determine if widget should draw
     return newValueGenerated
   },

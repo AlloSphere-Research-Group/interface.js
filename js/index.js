@@ -8,7 +8,8 @@ import Menu from './menu'
 import Communication from './communication'
 import PEP from 'pepjs'
 import Knob from './knob'
+import MultiSlider from './multislider'
 
 export {
-  Panel, Slider, Joystick, Button, Menu, Communication, Knob
+  Panel, Slider, Joystick, Button, Menu, Communication, Knob, MultiSlider
 }
