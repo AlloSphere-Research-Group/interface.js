@@ -22,7 +22,14 @@ Object.assign( MultiSlider, {
     __value:[.15,.35,.5,.75], // always 0-1, not for end-users
     value:[.5,.5,.5,.5],   // end-user value that may be filtered
     active: false,
+    /**
+     * The count property determines the number of sliders in the multislider, default 4.
+     * @memberof MultiSlider
+     * @instance
+     * @type {Integer}
+     */
     count:4,
+    lineWidth:1,
     /**
      * The style property can be either 'horizontal' (the default) or 'vertical'. This
      * determines the orientation of the MultiSlider instance.
@@ -54,8 +61,14 @@ Object.assign( MultiSlider, {
     
     // inherits from Widget
     multiSlider.init()
-
-    //multiSlider.createSliders()
+    
+    if( props.value === undefined && multiSlider.count !== 4 ) {
+      for( let i = 0; i < multiSlider.count; i++ ) {
+        multiSlider.__value[ i ] = i / multiSlider.count
+      }
+    }else if( typeof props.value === 'number' ) {
+      for( let i = 0; i < multiSlider.count; i++ ) multiSlider.__value[ i ] = props.value
+    }
 
     return multiSlider
   },
@@ -76,18 +89,22 @@ Object.assign( MultiSlider, {
     // draw fill (multiSlider value representation)
     this.ctx.fillStyle = this.fill
 
-    let sliderWidth = this.rect.width / this.count
+    let sliderWidth = this.style === 'vertical' ? this.rect.width / this.count : this.rect.height / this.count
 
     for( let i = 0; i < this.count; i++ ) {
-      let xpos = i * sliderWidth
+      
       if( this.style === 'horizontal' ) {
-        this.ctx.fillRect( 0, 0, this.rect.width * this.__value, this.rect.height )
+        let ypos = Math.floor( i * sliderWidth )
+        this.ctx.fillRect( 0, ypos, this.rect.width * this.__value[ i ], Math.ceil( sliderWidth ) )
+        this.ctx.strokeRect( 0,ypos, this.rect.width, sliderWidth )
       }else{
-        this.ctx.fillRect( xpos, this.rect.height - this.__value[ i ] * this.rect.height, sliderWidth, this.rect.height * this.__value[ i ] )
+        let xpos = Math.floor( i * sliderWidth )
+        this.ctx.fillRect( xpos, this.rect.height - this.__value[ i ] * this.rect.height, Math.ceil(sliderWidth), this.rect.height * this.__value[ i ] )
+        this.ctx.strokeRect( xpos, 0, sliderWidth, this.rect.height )
       }
     }
 
-    this.ctx.strokeRect( 0,0, this.rect.width, this.rect.height )
+   
   },
 
   addEvents() {
@@ -135,12 +152,14 @@ Object.assign( MultiSlider, {
    * @param {PointerEvent} e - The pointer event to be processed.
    */
   processPointerPosition( e ) {
-    let prevValue = this.value
+    let prevValue = this.value,
+        sliderNum
 
     if( this.style === 'horizontal' ) {
-      this.__value = ( e.clientX - this.rect.left ) / this.rect.width
+      sliderNum = Math.floor( ( e.clientY / this.rect.height ) / ( 1/this.count ) )
+      this.__value[ sliderNum ] = ( e.clientX - this.rect.left ) / this.rect.width
     }else{
-      let sliderNum = Math.floor( ( e.clientX / this.rect.width ) / ( 1/this.count ) )
+      sliderNum = Math.floor( ( e.clientX / this.rect.width ) / ( 1/this.count ) )
       this.__value[ sliderNum ] = 1 - ( e.clientY - this.rect.top  ) / this.rect.height 
     }
 
