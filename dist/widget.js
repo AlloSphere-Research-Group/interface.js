@@ -12,6 +12,10 @@ var _communication = require('./communication.js');
 
 var _communication2 = _interopRequireDefault(_communication);
 
+var _utilities = require('./utilities');
+
+var _utilities2 = _interopRequireDefault(_utilities);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -176,10 +180,12 @@ var Widget = {
 
     var value = this.__value,
         newValueGenerated = false,
-        lastValue = this.value,
-        w = this;
+        lastValue = this.valuei,
+        isArray = void 0;
 
-    if (Array.isArray(value)) {
+    isArray = Array.isArray(value);
+
+    if (isArray) {
       value = value.map(function (v) {
         return Widget.runFilters(v, _this);
       });
@@ -191,13 +197,28 @@ var Widget = {
 
     if (this.target !== null) this.transmit(this.value);
 
-    if (this.__value !== this.__prevValue) {
+    if (this.__prevValue !== null) {
+      if (isArray) {
+        if (!_utilities2.default.compareArrays(this.__value, this.__prevValue)) {
+          newValueGenerated = true;
+        }
+      } else if (this.__value !== this.__prevValue) {
+        newValueGenerated = true;
+      }
+    } else {
       newValueGenerated = true;
-
-      if (this.onvaluechange !== null) this.onvaluechange(this.value, lastValue);
     }
 
-    this.__prevValue = this.__value;
+    if (newValueGenerated) {
+      if (this.onvaluechange !== null) this.onvaluechange(this.value, lastValue);
+
+      if (Array.isArray(this.__value)) {
+        this.__prevValue = this.__value.slice();
+      } else {
+        this.__prevValue = this.__value;
+      }
+    }
+
     // newValueGenerated can be use to determine if widget should draw
     return newValueGenerated;
   },
@@ -210,6 +231,7 @@ var Widget = {
    * @instance
    */
   transmit: function transmit() {
+    //looks like this should handle arrays, not tested
     if (this.target === 'osc') {
       _communication2.default.OSC.send(this.address, this.value);
     }

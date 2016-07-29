@@ -1,5 +1,5 @@
 var p = Interface.Panel.create(),
-    s = Interface.Slider.create({
+    s = Interface.Joystick.create({
       width:1, height:1, target:'osc', address:'/test'
     })
 

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Knob = exports.Communication = exports.Menu = exports.Button = exports.Slider = exports.Panel = undefined;
+exports.Knob = exports.Communication = exports.Menu = exports.Button = exports.Joystick = exports.Slider = exports.Panel = undefined;
 
 var _panel = require('./panel');
 
@@ -12,6 +12,10 @@ var _panel2 = _interopRequireDefault(_panel);
 var _slider = require('./slider');
 
 var _slider2 = _interopRequireDefault(_slider);
+
+var _joystick = require('./joystick');
+
+var _joystick2 = _interopRequireDefault(_joystick);
 
 var _button = require('./button');
 
@@ -35,9 +39,12 @@ var _knob2 = _interopRequireDefault(_knob);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// Everything we need to include goes here and is fed to browserify in the gulpfile.js
+
 exports.Panel = _panel2.default;
 exports.Slider = _slider2.default;
+exports.Joystick = _joystick2.default;
 exports.Button = _button2.default;
 exports.Menu = _menu2.default;
 exports.Communication = _communication2.default;
-exports.Knob = _knob2.default; // Everything we need to include goes here and is fed to browserify in the gulpfile.js
+exports.Knob = _knob2.default;

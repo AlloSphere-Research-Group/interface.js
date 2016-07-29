@@ -1,5 +1,6 @@
 import Filters from './filters'
 import Communication from './communication.js'
+import Utilities from './utilities'
 
 /**
  * Widget is the base class that all other UI elements inherits from. It primarily
@@ -93,9 +94,11 @@ let Widget = {
    * @instance
    */
   output() {
-    let value = this.__value, newValueGenerated = false, lastValue = this.value, w = this
-   
-    if( Array.isArray( value ) ) {
+    let value = this.__value, newValueGenerated = false, lastValue = this.valuei, isArray
+
+    isArray = Array.isArray( value )
+
+    if( isArray ) {
       value = value.map( v => Widget.runFilters( v, this ) )
     }else{
       value = this.runFilters( value, this )
@@ -105,16 +108,29 @@ let Widget = {
     
     if( this.target !== null ) this.transmit( this.value )
 
-    if( this.__value !== this.__prevValue ) {
+    if( this.__prevValue !== null ) {
+      if( isArray ) {
+        if( !Utilities.compareArrays( this.__value, this.__prevValue ) ) {
+          newValueGenerated = true
+        }
+      } else if( this.__value !== this.__prevValue ) {
+        newValueGenerated = true
+      }
+    }else{
       newValueGenerated = true
-      if( this.onvaluechange !== null ) this.onvaluechange( this.value, lastValue )
     }
 
-    if (Array.isArray(this.__value)) {
-      this.__prevValue = this.__value.slice()
-    } else {
-      this.__prevValue = this.__value
+    if( newValueGenerated ) { 
+      if( this.onvaluechange !== null ) this.onvaluechange( this.value, lastValue )
+
+      if( Array.isArray( this.__value ) ) {
+        this.__prevValue = this.__value.slice()
+      } else {
+        this.__prevValue = this.__value
+      }
     }
+
+
     // newValueGenerated can be use to determine if widget should draw
     return newValueGenerated
   },
