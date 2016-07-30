@@ -180,7 +180,7 @@ var Widget = {
 
     var value = this.__value,
         newValueGenerated = false,
-        lastValue = this.valuei,
+        lastValue = this.value,
         isArray = void 0;
 
     isArray = Array.isArray(value);
@@ -230,10 +230,10 @@ var Widget = {
    * @memberof Widget
    * @instance
    */
-  transmit: function transmit() {
+  transmit: function transmit(override) {
     //looks like this should handle arrays, not tested
     if (this.target === 'osc') {
-      _communication2.default.OSC.send(this.address, this.value);
+      _communication2.default.OSC.send(this.address, override || this.value);
     }
   }
 };

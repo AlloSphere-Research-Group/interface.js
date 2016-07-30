@@ -94,7 +94,7 @@ let Widget = {
    * @instance
    */
   output() {
-    let value = this.__value, newValueGenerated = false, lastValue = this.valuei, isArray
+    let value = this.__value, newValueGenerated = false, lastValue = this.value, isArray
 
     isArray = Array.isArray( value )
 
@@ -140,10 +140,10 @@ let Widget = {
    * @memberof Widget
    * @instance
    */
-  transmit() {
+  transmit( override ) {
    //looks like this should handle arrays, not tested
     if( this.target === 'osc' ) {
-      Communication.OSC.send( this.address, this.value )
+      Communication.OSC.send( this.address, override || this.value )
     }
   },
 }

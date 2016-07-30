@@ -54,10 +54,12 @@ Object.assign( MultiButton, {
       multiButton.__value = props.value
     }else{
       multiButton.__value = []
+      for( let i = 0; i < multiButton.count; i++ ) multiButton.__value[ i ] = 0
       multiButton.value = []
     }
     
     multiButton.active = {}
+    multiButton.__prevValue = []
 
     multiButton.init()
 
@@ -98,17 +100,17 @@ Object.assign( MultiButton, {
     this.element.addEventListener( 'pointerdown',  this.pointerdown )
   },
 
-  getButtonNumFromEvent( e ) {
+  getDataFromEvent( e ) {
     let rowSize = 1/this.rows,
         row =  Math.floor( ( e.clientY / this.rect.height ) / rowSize ),
         columnSize = 1/this.columns,
         column =  Math.floor( ( e.clientX / this.rect.width ) / columnSize ),
         buttonNum = row * this.columns + column
 
-     return buttonNum
+     return { buttonNum, row, column }
   },
 
-  processButtonOn( buttonNum, e ) {
+  processButtonOn( data, e ) {
     if( this.style === 'toggle' ) {
       this.__value[ buttonNum ] = this.__value[ buttonNum ] === 1 ? 0 : 1
     }else if( this.style === 'momentary' ) {
@@ -121,10 +123,10 @@ Object.assign( MultiButton, {
         this.draw() 
       }, 50 )
     }else if( this.style === 'hold' ) {
-      this.__value[ buttonNum ] = 1
+      this.__value[ data.buttonNum ] = 1
     }
 
-    this.output()
+    this.output( data )
 
     this.draw()
   },
@@ -132,36 +134,38 @@ Object.assign( MultiButton, {
   events: {
     pointerdown( e ) {
       // only hold needs to listen for pointerup events; toggle and momentary only care about pointerdown
-      let buttonNum = this.getButtonNumFromEvent( e )
+      let data = this.getDataFromEvent( e )
 
-      this.active[ e.pointerId ] = [ buttonNum ]
-      this.active[ e.pointerId ].lastButton = buttonNum
+      this.active[ e.pointerId ] = [ data.buttonNum ]
+      this.active[ e.pointerId ].lastButton = data.buttonNum
 
       window.addEventListener( 'pointermove', this.pointermove ) 
       window.addEventListener( 'pointerup', this.pointerup ) 
 
-      this.processButtonOn( buttonNum, e )
+      this.processButtonOn( data, e )
     },
 
     pointermove( e ) {
-      let buttonNum = this.getButtonNumFromEvent( e )
+      let data = this.getDataFromEvent( e )
       
-      let checkForPressed = this.active[ e.pointerId ].indexOf( buttonNum ),
+      let checkForPressed = this.active[ e.pointerId ].indexOf( data.buttonNum ),
           lastButton  = this.active[ e.pointerId ].lastButton
       
-      if( checkForPressed === -1 && lastButton !== buttonNum ) {
+      if( checkForPressed === -1 && lastButton !== data.buttonNum ) {
         
         if( this.style === 'toggle' || this.style === 'hold' ) {
           if( this.style === 'hold' ) {
             this.__value[ lastButton ] = 0
+            this.output( data )
           }
-          this.active[ e.pointerId ] = [ buttonNum ]
+          this.active[ e.pointerId ] = [ data.buttonNum ]
         }else{
-          this.active[ e.pointerId ].push( buttonNum )
+          this.active[ e.pointerId ].push( data.buttonNum )
         }
-        this.active[ e.pointerId ].lastButton = buttonNum
 
-        this.processButtonOn( buttonNum, e )
+        this.active[ e.pointerId ].lastButton = data.buttonNum
+
+        this.processButtonOn( data, e )
       }
     },
 
@@ -176,18 +180,47 @@ Object.assign( MultiButton, {
           if( buttonsForPointer !== undefined ) {
             for( let button of buttonsForPointer ) {
               this.__value[ button ] = 0
+              let row = Math.floor( button / this.rows ),
+                  column = button % this.columns
+
+              this.output({ buttonNum:button, row, column })
             }
-
+          
             delete this.active[ e.pointerId ]
-
-            this.output()
-
+            
             this.draw()
           }
         }
       }
     }
-  }
+  },
+
+  output( buttonData ) {
+    let value = this.__value[ buttonData.buttonNum ], newValueGenerated = false, prevValue = this.__prevValue[ buttonData.buttonNum ]
+
+    value = this.runFilters( value, this )
+    
+    this.value[ buttonData.buttonNum ] = value
+    
+    if( this.target !== null ) this.transmit( [ value, buttonData.row, buttonData.column ] )
+
+    if( prevValue !== undefined ) {
+      if( value !== prevValue ) {
+        newValueGenerated = true
+      }
+    }else{
+      newValueGenerated = true
+    }
+
+    if( newValueGenerated ) { 
+      if( this.onvaluechange !== null ) this.onvaluechange( value, buttonData.row, buttonData.column )
+      
+      this.__prevValue[ buttonData.buttonNum ] = value
+    }
+
+    // newValueGenerated can be use to determine if widget should draw
+    return newValueGenerated
+  },
 })
 
 export default MultiButton
